@@ -11,59 +11,68 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
 <style>
-/* Layout: one-screen app — scrolling view, docked mini player above a 3-tab bar, sheets slide up from the bottom */
+/* Layout: one-screen app — scrolling view, docked mini player above a 3-tab bar; collections open on a cover-tinted band */
 :root{
-  --ink:#000000; --deck:#141316; --deck-2:#201E24; --line:#2C2A31; --mute:#A09CA8; --text:#F5F3F7;
-  --accent:#FF8A4C; --accent-ink:#1B0E06; --scrim:rgba(8,6,14,.66); --danger:#FF6B7A;
+  --ink:#000000; --deck:#141316; --deck-2:#201E24; --line:#2C2A31; --mute:#A3A0AA; --text:#F5F3F7;
+  --accent:#FF8A4C; --accent-ink:#1B0E06; --scrim:rgba(0,0,0,.7); --danger:#FF6B7A; --glass:rgba(255,255,255,.14);
   --display:"Bricolage Grotesque","Avenir Next",system-ui,sans-serif;
   --body:"Figtree",-apple-system,"Segoe UI",system-ui,sans-serif;
-  --tabs-h:58px; --mini-h:64px;
+  --tabs-h:58px; --mini-h:0px; --gut:max(16px,env(safe-area-inset-left,0px)); --gut-r:max(16px,env(safe-area-inset-right,0px));
   color-scheme:dark;
 }
 html,body{height:100%}
 body{background:var(--ink);color:var(--text);font-family:var(--body);font-size:15px;overflow:hidden;-webkit-tap-highlight-color:transparent}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
-button:focus-visible,input:focus-visible,label:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
 svg.i{width:22px;height:22px;fill:currentColor;flex:none}
 .app{height:100%;display:flex;flex-direction:column}
-main{flex:1;overflow-y:auto;overflow-x:hidden;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px calc(var(--tabs-h) + var(--mini-h) + 40px + env(safe-area-inset-bottom,0px))}
+main{flex:1;overflow-y:auto;overflow-x:hidden;padding-left:var(--gut);padding-right:var(--gut-r);padding-block:12px calc(var(--tabs-h) + var(--mini-h) + 40px + env(safe-area-inset-bottom,0px))}
 .top{display:flex;align-items:center;gap:10px;min-height:44px}
 .top h1{font-family:var(--display);font-weight:800;font-size:26px;letter-spacing:-.02em;margin:0;flex:1;min-width:0;text-wrap:balance}
-.brand{display:inline-flex;align-items:center;gap:8px}
-.brand i{width:22px;height:22px;border-radius:50%;background:conic-gradient(from 200deg,var(--accent),#C24BFF,var(--accent))}
 .icon{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;flex:none}
 .icon:hover{background:var(--deck)}
 h2{font-family:var(--display);font-weight:600;font-size:20px;margin:26px 0 12px;text-wrap:balance}
-.art{position:relative;overflow:hidden;background:var(--deck);flex:none}
-.art::after{content:"";position:absolute;inset:0;background:repeating-radial-gradient(circle at 70% 120%,transparent 0 9px,rgba(255,255,255,.07) 9px 10px)}
+.art{position:relative;overflow:hidden;background-color:var(--deck);background-size:cover;background-position:center;flex:none;display:block}
+.art .glyph{position:absolute;inset:0;display:grid;place-items:center;color:rgba(255,255,255,.85)}
+.art .glyph svg{width:42%;height:42%;fill:currentColor}
 .art.round{border-radius:50%!important}
-.art .ini{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:rgba(255,255,255,.9);z-index:1}
-.art .glyph{position:absolute;inset:0;display:grid;place-items:center;z-index:1;color:#fff}
 /* home */
 .shortcuts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px}
-.short{display:flex;align-items:center;gap:10px;background:var(--deck);border-radius:8px;overflow:hidden;text-align:left;min-width:0;height:56px}
+.short{display:flex;align-items:center;gap:10px;background:var(--deck);border-radius:6px;overflow:hidden;text-align:left;min-width:0;height:56px}
 .short:hover{background:var(--deck-2)}
 .short .art{width:56px;height:56px}
 .short b{font-weight:600;font-size:13px;line-height:1.25;padding-right:8px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .shelf{display:grid;grid-auto-flow:column;grid-auto-columns:138px;gap:14px;overflow-x:auto;scrollbar-width:none;margin-inline:-4px;padding-inline:4px}
 .shelf::-webkit-scrollbar{display:none}
 .card{display:flex;flex-direction:column;gap:7px;text-align:left;min-width:0}
-.card .art{width:100%;aspect-ratio:1;max-width:100%;border-radius:10px}
+.card .art{width:100%;aspect-ratio:1;max-width:100%;border-radius:6px}
 .card b{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card span{color:var(--mute);font-size:12px;margin-top:-4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card.artist{align-items:center;text-align:center}
+.welcome{margin-top:40px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
+.welcome .disc{width:120px;height:120px;border-radius:50%;background:conic-gradient(from 200deg,var(--accent),#C24BFF,var(--accent));display:grid;place-items:center}
+.welcome .disc::after{content:"";width:26px;height:26px;border-radius:50%;background:var(--ink)}
+.welcome h1{font-family:var(--display);font-weight:800;font-size:28px;margin:0;text-wrap:balance}
+.welcome p{color:var(--mute);margin:0;line-height:1.5;max-width:34ch}
 /* rows */
 .list{display:flex;flex-direction:column}
-.row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:6px 0;text-align:left;width:100%}
-.row .art{width:50px;height:50px;border-radius:6px}
-.row .meta{min-width:0;display:flex;flex-direction:column;gap:3px}
-.row .meta b{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:7px 0;text-align:left;width:100%}
+.row .art{width:56px;height:56px;border-radius:4px}
+.row .meta{min-width:0;display:flex;flex-direction:column;gap:4px}
+.row .meta b{font-weight:500;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
+.row .meta b span{overflow:hidden;text-overflow:ellipsis}
 .row.on .meta b{color:var(--accent)}
-.row .meta span{color:var(--mute);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
-.row .side{display:flex;align-items:center;gap:2px;color:var(--mute)}
-.heart-sm{color:var(--accent);display:inline-flex}
-.heart-sm svg{width:14px;height:14px;fill:currentColor}
-.tag{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);border:1px solid var(--line);border-radius:4px;padding:0 5px;line-height:16px;flex:none}
+.row .meta>span{color:var(--mute);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .side{color:var(--mute)}
+.eq{display:none;align-items:flex-end;gap:2px;height:12px;flex:none}
+.row.on .eq{display:inline-flex}
+.eq i{width:3px;background:var(--accent);height:40%;border-radius:1px}
+body.is-playing .row.on .eq i{animation:eq .9s ease-in-out infinite alternate}
+.eq i:nth-child(2){animation-delay:-.3s!important;height:90%}.eq i:nth-child(3){animation-delay:-.6s!important;height:60%}
+@keyframes eq{0%{height:25%}100%{height:100%}}
+.addrow .art{display:grid;place-items:center;background:var(--deck-2)}
+.addrow .art svg{width:28px;height:28px}
+.addrow b{font-size:17px!important}
 .empty{color:var(--mute);padding:28px 8px;text-align:center;line-height:1.5;max-width:34ch;margin:0 auto}
 .empty b{display:block;color:var(--text);font-size:17px;margin-bottom:4px}
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 6px}
@@ -71,110 +80,120 @@ h2{font-family:var(--display);font-weight:600;font-size:20px;margin:26px 0 12px;
 .chip[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
 .toolbar{display:flex;align-items:center;justify-content:space-between;color:var(--mute);font-size:13px;margin:10px 0 4px}
 .toolbar button{display:inline-flex;align-items:center;gap:6px;font-weight:500}
-.pill{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-ink);font-weight:700;padding:10px 16px;border-radius:999px;cursor:pointer}
-.pill.ghost{background:var(--deck);color:var(--text)}
-.pill input{display:none}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-ink);font-weight:700;padding:11px 18px;border-radius:999px;cursor:pointer}
+.pill.ghost{background:var(--deck-2);color:var(--text)}
 /* search */
 .field{position:relative}
 .field svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--ink)}
-.search{width:100%;box-sizing:border-box;background:var(--text);color:var(--ink);border:0;border-radius:10px;padding:12px 14px 12px 42px;font:inherit;font-size:16px;font-weight:500}
-.search::placeholder{color:#6B6585}
+.search{width:100%;box-sizing:border-box;background:var(--text);color:var(--ink);border:0;border-radius:8px;padding:12px 14px 12px 42px;font:inherit;font-size:16px;font-weight:500}
+.search::placeholder{color:#6B6875}
 .moods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.mood{height:96px;border-radius:10px;padding:12px;text-align:left;font-family:var(--display);font-weight:800;font-size:18px;position:relative;overflow:hidden;color:#fff;display:flex;align-items:flex-start}
-.mood span{position:relative;z-index:1;text-shadow:0 1px 8px rgba(0,0,0,.25)}
-.mood i{position:absolute;right:-14px;bottom:-14px;width:70px;height:70px;border-radius:8px;transform:rotate(22deg);box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.mood{height:96px;border-radius:8px;padding:12px;text-align:left;font-family:var(--display);font-weight:800;font-size:17px;position:relative;overflow:hidden;color:#fff;display:flex;align-items:flex-start}
+.mood span{position:relative;z-index:1;text-shadow:0 1px 8px rgba(0,0,0,.3);overflow-wrap:anywhere;max-width:70%}
+.mood .art{position:absolute;right:-12px;bottom:-12px;width:72px;height:72px;border-radius:6px;transform:rotate(22deg);box-shadow:0 4px 14px rgba(0,0,0,.4)}
 /* collection */
-.chead{display:flex;flex-direction:column;align-items:center;gap:14px;padding-top:6px;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px));padding-bottom:4px}
-.chead .art{width:min(62vw,230px);aspect-ratio:1;max-width:100%;border-radius:10px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
-.chead .art.round{width:min(52vw,200px)}
-.ctitle{align-self:stretch}
-.ctitle h1{font-family:var(--display);font-weight:800;font-size:28px;letter-spacing:-.02em;margin:0;line-height:1.1;text-wrap:balance;overflow-wrap:anywhere}
-.ctitle p{margin:6px 0 0;color:var(--mute);font-size:13px}
-.cact{display:flex;align-items:center;gap:6px;align-self:stretch;margin-top:2px}
+.coll{margin-inline:calc(-1 * var(--gut)) calc(-1 * var(--gut-r));margin-top:-12px;padding-left:var(--gut);padding-right:var(--gut-r);padding-top:calc(12px + env(safe-area-inset-top,0px));background:linear-gradient(to bottom,var(--band) 0,var(--band-2) 190px,var(--ink) 380px)}
+.ctop{display:flex;align-items:center;min-height:48px}
+.round-btn{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.28);display:grid;place-items:center}
+.cfind{display:flex;gap:10px;margin-top:14px}
+.cfind label{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:var(--glass);border-radius:6px;padding:0 10px;height:40px}
+.cfind input{flex:1;min-width:0;background:none;border:0;color:var(--text);font:inherit;font-size:16px;font-weight:600;outline:none}
+.cfind input::placeholder{color:rgba(255,255,255,.82)}
+.cfind label:focus-within{outline:2px solid var(--accent)}
+.cfind button{background:var(--glass);border-radius:6px;padding:0 16px;height:40px;font-weight:700;font-size:15px}
+.ctitle h1{font-family:var(--display);font-weight:800;font-size:32px;letter-spacing:-.02em;margin:30px 0 0;line-height:1.08;text-wrap:balance;overflow-wrap:anywhere}
+.ctitle p{margin:8px 0 0;color:rgba(255,255,255,.72);font-size:15px}
+.cact{display:flex;align-items:center;gap:12px;margin-top:14px}
 .cact .grow{flex:1}
-.bigplay{width:54px;height:54px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center}
+.thumb{width:44px;height:56px;position:relative;flex:none}
+.thumb .art{position:absolute;width:40px;height:52px;border-radius:4px;border:2px solid rgba(255,255,255,.75);box-shadow:3px 0 0 -1px rgba(255,255,255,.35)}
+.bigplay{width:56px;height:56px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
 .bigplay svg{width:26px;height:26px}
 .mode{color:var(--mute)}
-.mode.active{color:var(--accent)}
+.mode.active{color:var(--accent);position:relative}
+.mode.active::after{content:"";position:absolute;bottom:4px;left:50%;width:4px;height:4px;border-radius:50%;background:currentColor;transform:translateX(-50%)}
+.cbar{position:fixed;left:0;right:0;top:0;z-index:4;padding-top:env(safe-area-inset-top,0px);padding-left:var(--gut);padding-right:var(--gut-r);background:var(--bar,var(--deck));display:grid;grid-template-columns:44px minmax(0,1fr) 56px;align-items:center;gap:10px;height:calc(64px + env(safe-area-inset-top,0px));box-sizing:border-box;transform:translateY(-100%);transition:transform .2s;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.cbar.show{transform:none}
+.cbar b{text-align:center;font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbar .bigplay{width:48px;height:48px}
 /* mini + tabs */
-.dock{position:fixed;left:0;right:0;bottom:0;z-index:5;background:linear-gradient(to top,var(--ink) 55%,rgba(0,0,0,0));padding-bottom:env(safe-area-inset-bottom,0px)}
-.mini{margin-inline:max(8px,env(safe-area-inset-left,0px)) max(8px,env(safe-area-inset-right,0px));background:var(--deck-2);border-radius:10px;padding:7px;display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px;align-items:center;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.45)}
-.mini .art{width:42px;height:42px;border-radius:6px}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:5;background:linear-gradient(to top,var(--ink) 60%,rgba(0,0,0,0));padding-bottom:env(safe-area-inset-bottom,0px)}
+.mini{margin-inline:max(8px,env(safe-area-inset-left,0px)) max(8px,env(safe-area-inset-right,0px));background:var(--mini-bg,var(--deck-2));border-radius:8px;padding:7px;display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px;align-items:center;position:relative;overflow:hidden;transition:background-color .4s}
+.mini .art{width:42px;height:42px;border-radius:4px}
 .mini .meta{min-width:0;text-align:left;display:flex;flex-direction:column;gap:2px}
 .mini .meta b{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mini .meta span{font-size:12px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mini .bar{position:absolute;left:10px;right:10px;bottom:0;height:2px;background:rgba(255,255,255,.12)}
+.mini .meta span{font-size:13px;color:rgba(255,255,255,.72);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini .bar{position:absolute;left:8px;right:8px;bottom:0;height:2px;background:rgba(255,255,255,.18);border-radius:2px}
 .mini .bar i{display:block;height:100%;width:0;background:var(--text)}
 .tabs{display:grid;grid-template-columns:repeat(3,1fr);height:var(--tabs-h);padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
 .tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--mute);font-weight:500}
 .tab[aria-current="page"]{color:var(--text)}
 /* sheets */
 .scrim{position:fixed;inset:0;background:var(--scrim);z-index:30;display:flex;align-items:flex-end;justify-content:center}
-.modal{background:var(--deck);width:100%;max-width:520px;border-radius:18px 18px 0 0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-top:8px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));max-height:80%;overflow-y:auto;animation:up .22s ease-out}
+.modal{background:var(--deck);width:100%;max-width:520px;border-radius:16px 16px 0 0;padding-left:var(--gut);padding-right:var(--gut-r);padding-top:8px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));max-height:82%;overflow-y:auto;animation:up .22s ease-out;box-sizing:border-box}
 .modal::before{content:"";display:block;width:36px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 10px}
 @keyframes up{from{transform:translateY(40px);opacity:.4}}
 .mhead{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:6px}
-.mhead .art{width:46px;height:46px;border-radius:6px}
+.mhead .art{width:48px;height:48px;border-radius:4px}
 .mhead b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mhead span{color:var(--mute);font-size:13px}
 .mi{display:flex;align-items:center;gap:14px;width:100%;padding:13px 2px;text-align:left;font-weight:500;border-radius:8px}
 .mi:hover{background:var(--deck-2)}
-.mi .art{width:44px;height:44px;border-radius:6px}
+.mi .art{width:44px;height:44px;border-radius:4px}
 .mi .grow{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mi small{color:var(--mute);font-weight:400}
 .mi.danger{color:var(--danger)}
 .mi.sel{color:var(--accent)}
 .mtitle{font-family:var(--display);font-weight:600;font-size:18px;margin:4px 0 10px;text-align:center}
 .form{display:flex;flex-direction:column;gap:12px;padding:6px 0}
-.form input{background:var(--ink);border:1px solid var(--line);color:var(--text);border-radius:10px;padding:13px 14px;font:inherit;font-size:16px}
+.form input{background:var(--ink);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:13px 14px;font:inherit;font-size:16px}
 .form .err{color:var(--danger);font-size:13px;min-height:1em;margin:-4px 0 0}
 .form .btns{display:flex;gap:10px;justify-content:flex-end}
 /* player */
-.sheet{position:fixed;inset:0;z-index:20;background:var(--ink);display:flex;flex-direction:column;padding-left:max(22px,env(safe-area-inset-left,0px));padding-right:max(22px,env(safe-area-inset-right,0px));padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);overflow-y:auto;visibility:hidden}
-.sheet.open{transform:none;visibility:visible}
-.sheet .glow{position:absolute;inset:0 0 35%;opacity:.5;pointer-events:none;z-index:-1}
+.sheet{position:fixed;inset:0;z-index:20;background:var(--ink);display:flex;flex-direction:column;padding-left:max(22px,env(safe-area-inset-left,0px));padding-right:max(22px,env(safe-area-inset-right,0px));padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1),visibility 0s .35s;overflow-y:auto;visibility:hidden}
+.sheet.open{transform:none;visibility:visible;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.sheet .glow{position:absolute;inset:0;pointer-events:none;z-index:-1}
 .stop{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;text-align:center}
 .stop div{min-width:0}
 .stop small{display:block;color:var(--mute);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
 .stop b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.big{width:min(100%,380px);aspect-ratio:1;max-width:100%;border-radius:14px;margin:auto auto 26px;box-shadow:0 30px 70px rgba(0,0,0,.5)}
-.big canvas{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+.big{width:min(100%,380px);aspect-ratio:1;max-width:100%;border-radius:8px;margin:auto auto 26px;box-shadow:0 30px 70px rgba(0,0,0,.55)}
 .wrap{max-width:380px;width:100%;margin-inline:auto}
 .now{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px}
 .now h1{font-family:var(--display);font-weight:800;font-size:24px;margin:0;letter-spacing:-.01em;line-height:1.15;overflow-wrap:anywhere}
 .now p{margin:4px 0 0}
-.now p button{color:var(--mute)}
-.now p button:hover{color:var(--text);text-decoration:underline}
+.now p button{color:rgba(255,255,255,.72);text-align:left}
 .liked{color:var(--accent)}
 .seek{margin-top:18px}
 input[type=range]{width:100%;-webkit-appearance:none;appearance:none;background:transparent;height:24px;margin:0}
-input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(90deg,var(--text) var(--p,0%),var(--line) var(--p,0%))}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:4px;background:linear-gradient(90deg,var(--text) var(--p,0%),rgba(255,255,255,.22) var(--p,0%))}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--text);margin-top:-5px}
-input[type=range]::-moz-range-track{height:4px;border-radius:4px;background:var(--line)}
+input[type=range]::-moz-range-track{height:4px;border-radius:4px;background:rgba(255,255,255,.22)}
 input[type=range]::-moz-range-progress{height:4px;border-radius:4px;background:var(--text)}
 input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:var(--text)}
 .times{display:flex;justify-content:space-between;color:var(--mute);font-size:12px;font-variant-numeric:tabular-nums}
 .ctrls{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
 .ctrls .icon{width:50px;height:50px}
-.ctrls .icon svg{width:28px;height:28px}
+.ctrls .icon svg{width:30px;height:30px}
 .ctrls .mode svg{width:24px;height:24px}
-.play{width:70px;height:70px;border-radius:50%;background:var(--text);color:var(--ink);display:grid;place-items:center}
+.play{width:68px;height:68px;border-radius:50%;background:var(--text);color:#000;display:grid;place-items:center}
 .play svg{width:32px;height:32px}
 .one{position:relative}
-.one::after{content:"1";position:absolute;top:9px;right:9px;font-size:9px;font-weight:700}
+.one::before{content:"1";position:absolute;top:9px;right:9px;font-size:9px;font-weight:700}
 .extra{display:flex;justify-content:space-between;margin-top:14px;color:var(--mute)}
 .extra button{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:500;padding:8px 4px}
 .extra .on{color:var(--accent)}
-.toast{position:fixed;left:50%;bottom:calc(var(--tabs-h) + var(--mini-h) + 24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--text);color:var(--ink);padding:10px 16px;border-radius:10px;font-size:13px;font-weight:600;z-index:40;max-width:calc(100% - 40px);box-sizing:border-box}
+.toast{position:fixed;left:50%;bottom:calc(var(--tabs-h) + var(--mini-h) + 24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--text);color:#000;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;z-index:40;max-width:calc(100% - 40px);box-sizing:border-box;text-align:center}
 .qlabel{font-size:13px;color:var(--mute);font-weight:600;letter-spacing:.04em;margin:22px 0 6px;display:flex;justify-content:space-between;align-items:center}
-@media (min-width:760px){.moods{grid-template-columns:repeat(3,1fr)}.shortcuts{grid-template-columns:repeat(3,1fr)}.chead{flex-direction:row;align-items:flex-end;flex-wrap:wrap}.ctitle{flex:1;align-self:auto}}
-@media (prefers-reduced-motion:reduce){.sheet{transition:none}.modal{animation:none}}
+@media (min-width:760px){.moods{grid-template-columns:repeat(3,1fr)}.shortcuts{grid-template-columns:repeat(3,1fr)}}
+@media (prefers-reduced-motion:reduce){.sheet,.cbar{transition:none}.modal{animation:none}body.is-playing .row.on .eq i{animation:none}}
 </style>
 <style>:root{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
 </head>
 <body>
 
 <div class="app"><main id="view" tabindex="-1"></main></div>
+<div class="cbar" id="cbar" aria-hidden="true"></div>
 
 <div class="dock">
   <div class="mini" id="mini" hidden>
@@ -196,9 +215,9 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radiu
   <div class="stop">
     <button class="icon" data-act="close-player" aria-label="Réduire le lecteur"><svg class="i" viewBox="0 0 24 24"><path d="M6.4 8.6 12 14.2l5.6-5.6L19 10l-7 7-7-7z"/></svg></button>
     <div><small>Lecture depuis</small><b id="ctxName">Bibliothèque</b></div>
-    <button class="icon" data-act="more-current" aria-label="Plus d'options"></button>
+    <button class="icon" id="moreCur" data-act="more-current" aria-label="Plus d'options"></button>
   </div>
-  <div class="big art" id="bigArt"><canvas id="viz"></canvas></div>
+  <div class="big art" id="bigArt"></div>
   <div class="wrap">
     <div class="now">
       <div style="min-width:0"><h1 id="bigT"></h1><p><button id="bigA" data-act="artist-current"></button></p></div>
@@ -210,14 +229,14 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radiu
     </div>
     <div class="ctrls">
       <button class="icon mode" id="shuf" data-act="shuffle" aria-label="Lecture aléatoire"></button>
-      <button class="icon" data-act="prev" aria-label="Titre précédent"></button>
+      <button class="icon" id="prevBtn" data-act="prev" aria-label="Titre précédent"></button>
       <button class="play" id="play" data-act="toggle" aria-label="Lecture"></button>
-      <button class="icon" data-act="next" aria-label="Titre suivant"></button>
+      <button class="icon" id="nextBtn" data-act="next" aria-label="Titre suivant"></button>
       <button class="icon mode" id="rep" data-act="repeat" aria-label="Répéter"></button>
     </div>
     <div class="extra">
       <button id="timerBtn" data-act="timer"></button>
-      <button data-act="queue"></button>
+      <button id="queueBtn" data-act="queue"></button>
     </div>
   </div>
 </div>
@@ -229,14 +248,14 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;border:0;border-radiu
 
 <script>
 /* ---- Owner lock: only this Telegram account can use the app ---- */
-const OWNER_ID='';/* ton identifiant Telegram, ex. '123456789' */
+const OWNER_ID='';
 (function(){
   const W=window.Telegram&&window.Telegram.WebApp;
   const uid=W&&W.initDataUnsafe&&W.initDataUnsafe.user?String(W.initDataUnsafe.user.id):null;
   if(!OWNER_ID||uid===OWNER_ID)return;
-  document.body.innerHTML='<div style="height:100%;display:grid;place-items:center;text-align:center;padding:24px;background:#000;color:#F5F3F7;font-family:system-ui,sans-serif"><div><div style="font-size:22px;font-weight:700;margin-bottom:8px">Accès réservé</div><div style="color:#A09CA8">Cette app est privée.</div></div></div>';
-  try{W&&W.ready()}catch(e){}
   window.__ondeLocked=true;
+  document.body.innerHTML='<div style="height:100%;display:grid;place-items:center;text-align:center;padding:24px;background:#000;color:#F5F3F7;font-family:system-ui,sans-serif"><div><div style="font-size:22px;font-weight:700;margin-bottom:8px">Accès réservé</div><div style="color:#A3A0AA">Cette app est privée.</div></div></div>';
+  try{W&&W.ready()}catch(e){}
 })();
 </script>
 <script>
@@ -256,88 +275,79 @@ const P={
   queue:'M3 5h13v2H3zm0 4h13v2H3zm0 4h8v2H3zm12 0v6l5-3z',moon:'M14.5 3a9 9 0 1 0 6.6 14.9A8 8 0 0 1 14.5 3z',
   check:'M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z',sort:'M3 6h18v2H3zm0 5h12v2H3zm0 5h6v2H3z',
   file:'M6 2h8l6 6v14H6zm7 1.5V9h5.5z',note:'M12 3v10.6A4 4 0 1 0 14 17V7h4V3z',
-  person:'M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4 0-9 2-9 6v2h18v-2c0-4-5-6-9-6z'
+  person:'M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-4 0-9 2-9 6v2h18v-2c0-4-5-6-9-6z',
+  search:'M10 3a7 7 0 1 0 4.3 12.5l5.3 5.3 1.4-1.4-5.3-5.3A7 7 0 0 0 10 3zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10z',
+  x:'M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19l5.6-5.6 5.6 5.6 1.4-1.4-5.6-5.6L19 6.4 17.6 5 12 10.6z'
 };
 const ic=(n,c='i')=>`<svg class="${c}" viewBox="0 0 24 24" aria-hidden="true"><path d="${P[n]}"/></svg>`;
 const store={get(k,d){try{const v=localStorage.getItem('onde:'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('onde:'+k,JSON.stringify(v))}catch(e){}}};
 const audio=$('#audio'),view=$('#view');
-const fmt=s=>{if(!isFinite(s))return'–:––';s=Math.floor(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
-const longFmt=s=>{s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?`${h} h ${m} min`:`${m} min ${String(s%60).padStart(2,'0')} s`};
+const fmt=s=>{if(!isFinite(s))return'0:00';s=Math.floor(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
 const hueOf=s=>[...String(s)].reduce((a,c)=>(a*31+c.charCodeAt(0))%360,7);
-const artBg=h=>`radial-gradient(circle at 25% 20%,hsl(${h} 95% 70%),transparent 55%),radial-gradient(circle at 85% 90%,hsl(${(h+60)%360} 80% 45%),transparent 60%),linear-gradient(135deg,hsl(${h} 70% 35%),hsl(${(h+300)%360} 60% 18%))`;
-const initials=n=>n.split(/\s+/).filter(w=>w.length>2||/^[A-Z]/.test(w)).slice(0,2).map(w=>w[0]).join('').toUpperCase()||n[0];
+const plural=(n,w)=>`${n} ${w}${n>1?'s':''}`;
+
+/* ================= Reading tags and covers from the user's files ================= */
+const td=(enc,u)=>{try{
+  if(enc===0)return new TextDecoder('windows-1252').decode(u);
+  if(enc===1){if(u[0]===0xFE&&u[1]===0xFF)return new TextDecoder('utf-16be').decode(u.subarray(2));return new TextDecoder('utf-16le').decode(u[0]===0xFF&&u[1]===0xFE?u.subarray(2):u)}
+  if(enc===2)return new TextDecoder('utf-16be').decode(u);
+  return new TextDecoder('utf-8').decode(u)}catch(e){return''}};
+const clean=s=>s.split('\0').map(x=>x.trim()).filter(Boolean).join(', ');
+const latin=(u,a,b)=>String.fromCharCode(...u.subarray(a,b));
+function readId3(u,dv){
+  const ver=u[3],ss=o=>((u[o]&127)<<21)|((u[o+1]&127)<<14)|((u[o+2]&127)<<7)|(u[o+3]&127);
+  const end=Math.min(u.length,10+ss(6));let p=10;const out={};
+  if(u[5]&0x40)p+=ver===4?ss(10):dv.getUint32(10)+4;
+  const pic=(f,isV2)=>{let i,mime;const enc=f[0];
+    if(isV2){mime='image/'+latin(f,1,4).toLowerCase();i=5}else{i=1;while(i<f.length&&f[i]!==0)i++;mime=latin(f,1,i).toLowerCase();i+=2}
+    if(enc===1||enc===2){while(i+1<f.length&&!(f[i]===0&&f[i+1]===0))i+=2;i+=2}else{while(i<f.length&&f[i]!==0)i++;i++}
+    if(!mime.includes('/'))mime='image/'+(mime||'jpeg');mime=mime.replace('jpg','jpeg');
+    return new Blob([f.slice(i)],{type:mime})};
+  const txt=f=>clean(td(f[0],f.subarray(1)));
+  if(ver===2){
+    while(p+6<=end){const id=latin(u,p,p+3);if(!/^[A-Z0-9]{3}$/.test(id))break;const sz=(u[p+3]<<16)|(u[p+4]<<8)|u[p+5];const f=u.subarray(p+6,p+6+sz);
+      if(id==='TT2')out.title=txt(f);else if(id==='TP1')out.artist=txt(f);else if(id==='TAL')out.album=txt(f);else if(id==='PIC'&&!out.pic)out.pic=pic(f,true);
+      p+=6+sz}
+    return out;
+  }
+  while(p+10<=end){const id=latin(u,p,p+4);if(!/^[A-Z0-9]{4}$/.test(id))break;const sz=ver===4?ss(p+4):dv.getUint32(p+4);const f=u.subarray(p+10,p+10+sz);
+    if(id==='TIT2')out.title=txt(f);else if(id==='TPE1')out.artist=txt(f);else if(id==='TALB')out.album=txt(f);else if(id==='APIC'&&!out.pic)out.pic=pic(f,false);
+    p+=10+sz}
+  return out;
+}
+function readMp4(u,dv){
+  const out={};
+  const walk=(s,e,depth)=>{let p=s;while(p+8<=e&&depth<8){let sz=dv.getUint32(p),h=8;const type=latin(u,p+4,p+8);
+    if(sz===1){sz=Number(dv.getBigUint64(p+8));h=16}else if(sz===0)sz=e-p;if(sz<8||p+sz>e)break;
+    if(type==='moov'||type==='udta'||type==='ilst')walk(p+h,p+sz,depth+1);
+    else if(type==='meta')walk(p+h+4,p+sz,depth+1);
+    else if(['\xa9nam','\xa9ART','aART','\xa9alb','covr'].includes(type)){
+      const d=p+h;if(latin(u,d+4,d+8)==='data'){const dsz=dv.getUint32(d),kind=dv.getUint32(d+8)&0xffffff,body=u.subarray(d+16,d+dsz);
+        if(type==='covr'){if(!out.pic)out.pic=new Blob([body.slice()],{type:kind===14?'image/png':'image/jpeg'})}
+        else{const s=new TextDecoder('utf-8').decode(body);if(type==='\xa9nam')out.title=s;else if(type==='\xa9ART')out.artist=s;else if(type==='aART'){if(!out.artist)out.artist=s}else out.album=s}}}
+    p+=sz}};
+  walk(0,u.length,0);return out;
+}
+async function readTags(blob){
+  try{const buf=await blob.arrayBuffer(),u=new Uint8Array(buf),dv=new DataView(buf);
+    if(latin(u,0,3)==='ID3')return readId3(u,dv);
+    if(latin(u,4,8)==='ftyp')return readMp4(u,dv);
+  }catch(e){}
+  return {};
+}
+function fromName(name){
+  const base=name.replace(/\.[^.]+$/,'').replace(/_/g,' ').replace(/^\d{1,3}[\s.\-]+/,'').trim();
+  const parts=base.split(/\s+-\s+/);
+  return parts[1]?{artist:parts[0].trim(),title:parts.slice(1).join(' - ').trim()}:{title:base,artist:'Artiste inconnu'};
+}
+function tintOf(url){return new Promise(res=>{const im=new Image();im.onload=()=>{try{
+  const c=document.createElement('canvas');c.width=c.height=16;const x=c.getContext('2d');x.drawImage(im,0,0,16,16);const d=x.getImageData(0,0,16,16).data;
+  let r=0,g=0,b=0,w=0;for(let i=0;i<d.length;i+=4){const mx=Math.max(d[i],d[i+1],d[i+2]),mn=Math.min(d[i],d[i+1],d[i+2]);const wt=(mx-mn)/255+.04;r+=d[i]*wt;g+=d[i+1]*wt;b+=d[i+2]*wt;w+=wt}
+  r/=w*255;g/=w*255;b/=w*255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),dl=mx-mn;let h=0;
+  if(dl){h=mx===r?((g-b)/dl)%6:mx===g?(b-r)/dl+2:(r-g)/dl+4;h=Math.round(h*60+360)%360}
+  const l=(mx+mn)/2,s=dl?dl/(1-Math.abs(2*l-1)):0;res({h,s:Math.round(Math.min(1,s)*100)})}catch(e){res(null)}};im.onerror=()=>res(null);im.src=url})}
 
 /* ================= Data layer ================= */
-const MOODS={'Nuit électrique':{hue:280},'Chill':{hue:190},'Énergie':{hue:20},'Café & lecture':{hue:38}};
-const DEMOS=[
-  ['Néons sur la Seine','Les Néons du Port',18,104,57,'triangle',7,'Nuit électrique'],
-  ['Ligne 14, 2h du matin','Les Néons du Port',265,88,52,'sine',21,'Nuit électrique'],
-  ['Quai désert','Les Néons du Port',300,96,54,'triangle',58,'Nuit électrique'],
-  ['Marée basse','Lune Basse',205,76,50,'sine',42,'Chill'],
-  ['Dimanche lent','Lune Basse',45,70,55,'sine',99,'Chill'],
-  ['Brume sur l’étang','Lune Basse',175,72,53,'sine',17,'Chill'],
-  ['Vélo jusqu’à l’aube','Café Rotatif',330,132,62,'triangle',11,'Énergie'],
-  ['Pédale douce, cœur rapide','Café Rotatif',350,126,60,'square',64,'Énergie'],
-  ['Sprint sur les toits','Café Rotatif',10,138,59,'triangle',23,'Énergie'],
-  ['Café Crème','Mirabelle Ohm',160,120,60,'square',3,'Café & lecture'],
-  ['Page 214','Mirabelle Ohm',30,92,58,'sine',77,'Café & lecture'],
-  ['La tasse a refroidi pendant que je lisais le dernier chapitre','Mirabelle Ohm',60,84,56,'triangle',31,'Café & lecture']
-].map((d,i)=>({id:'d'+(i+1),title:d[0],artist:d[1],hue:d[2],bpm:d[3],root:d[4],wave:d[5],seed:d[6],mood:d[7],demo:true,url:null,dur:64*60/d[3]}));
-
-const lib={
-  tracks:[...DEMOS],
-  liked:new Set(store.get('liked',['d1','d4','d10'])),
-  recent:store.get('recent',[]),
-  playlists:store.get('playlists',null)||[
-    {id:'p1',name:'Trajet du matin',tracks:['d7','d1','d9','d3'],at:Date.now()-86400000*3,example:true},
-    {id:'p2',name:'Pour bosser au calme',tracks:['d11','d5','d10','d6','d4'],at:Date.now()-86400000,example:true}
-  ],
-  get(id){return this.tracks.find(t=>t.id===id)},
-  artists(){const m=new Map();this.tracks.forEach(t=>{if(!m.has(t.artist))m.set(t.artist,[]);m.get(t.artist).push(t.id)});return [...m].map(([name,ids])=>({name,ids,hue:hueOf(name)}))},
-  byArtist(n){return this.tracks.filter(t=>t.artist===n).map(t=>t.id)},
-  byMood(m){return this.tracks.filter(t=>t.mood===m).map(t=>t.id)},
-  files(){return this.tracks.filter(t=>!t.demo).map(t=>t.id)},
-  likedIds(){return this.tracks.filter(t=>this.liked.has(t.id)).map(t=>t.id).reverse()},
-  pl(id){return this.playlists.find(p=>p.id===id)},
-  savePl(){store.set('playlists',this.playlists)},
-  createPl(name,first){const p={id:'p'+Date.now().toString(36),name,tracks:first?[first]:[],at:Date.now()};this.playlists.unshift(p);this.savePl();return p},
-  renamePl(id,name){const p=this.pl(id);if(p){p.name=name;delete p.example;this.savePl()}},
-  deletePl(id){this.playlists=this.playlists.filter(p=>p.id!==id);this.savePl()},
-  addTo(pid,tid){const p=this.pl(pid);if(!p)return false;if(p.tracks.includes(tid))return false;p.tracks.push(tid);p.at=Date.now();this.savePl();return true},
-  removeFrom(pid,tid){const p=this.pl(pid);if(p){p.tracks=p.tracks.filter(x=>x!==tid);this.savePl()}},
-  toggleLike(id){this.liked.has(id)?this.liked.delete(id):this.liked.add(id);store.set('liked',[...this.liked]);return this.liked.has(id)},
-  pushRecent(id){this.recent=[id,...this.recent.filter(x=>x!==id)].slice(0,12);store.set('recent',this.recent)},
-  plArt(p){const t=this.get(p.tracks[0]);return t?t.hue:hueOf(p.name)}
-};
-
-/* ---- demo audio, synthesized on the device ---- */
-function rng(s){return()=>{s=(s*16807)%2147483647;return(s-1)/2147483646}}
-const mtof=m=>440*Math.pow(2,(m-69)/12);
-async function synth(spec){
-  const sr=22050,beat=60/spec.bpm,bars=8,dur=bars*4*beat*2;
-  const OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext;
-  const ctx=new OAC(1,Math.ceil(sr*(dur+.5)),sr);
-  const master=ctx.createGain();master.gain.value=.5;master.connect(ctx.destination);
-  const r=rng(spec.seed),scale=[0,3,5,7,10,12,15],prog=[0,-4,3,-2].map(x=>spec.root+x);
-  const note=(t,f,len,type,vol)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+len);o.connect(g);g.connect(master);o.start(t);o.stop(t+len+.05)};
-  const kick=t=>{const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(40,t+.15);g.gain.setValueAtTime(.9,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);o.connect(g);g.connect(master);o.start(t);o.stop(t+.35)};
-  const mel=[];for(let i=0;i<16;i++)mel.push(r()<.7?scale[Math.floor(r()*scale.length)]:null);
-  for(let rep=0;rep<2;rep++)for(let b=0;b<bars;b++){
-    const root=prog[b%4],t0=(rep*bars+b)*4*beat;
-    for(let k=0;k<4;k++){kick(t0+k*beat);note(t0+k*beat+beat/2,mtof(root-24),beat*.45,'sine',.35)}
-    [0,4,7].forEach(iv=>note(t0,mtof(root+iv-12),beat*3.8,'sine',.06));
-    if(rep>0||b>=4)for(let s=0;s<8;s++){const m=mel[(b*8+s)%16];if(m!==null)note(t0+s*beat/2,mtof(root+m),beat*.4,spec.wave,spec.wave==='square'?.05:.12)}
-  }
-  const buf=await ctx.startRendering();
-  const d=buf.getChannelData(0),n=d.length,ab=new ArrayBuffer(44+n*2),v=new DataView(ab);
-  const w=(o,s)=>[...s].forEach((c,i)=>v.setUint8(o+i,c.charCodeAt(0)));
-  w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);
-  v.setUint32(24,sr,true);v.setUint32(28,sr*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);
-  for(let i=0;i<n;i++){const s=Math.max(-1,Math.min(1,d[i]));v.setInt16(44+i*2,s*32767,true)}
-  return URL.createObjectURL(new Blob([ab],{type:'audio/wav'}));
-}
-
-/* ---- the user's own files, kept in this browser ---- */
 let db=null;
 const idb={
   open(){return new Promise(res=>{try{const r=indexedDB.open('onde',1);r.onupgradeneeded=()=>r.result.createObjectStore('tracks',{keyPath:'id'});r.onsuccess=()=>{db=r.result;res()};r.onerror=()=>res()}catch(e){res()}})},
@@ -345,6 +355,52 @@ const idb={
   put(t){try{db&&db.transaction('tracks','readwrite').objectStore('tracks').put(t)}catch(e){}},
   del(id){try{db&&db.transaction('tracks','readwrite').objectStore('tracks').delete(id)}catch(e){}}
 };
+const lib={
+  tracks:[],
+  liked:new Set(store.get('liked',[])),
+  recent:store.get('recent',[]),
+  playlists:store.get('playlists',[]),
+  get(id){return this.tracks.find(t=>t.id===id)},
+  allIds(){return this.tracks.map(t=>t.id)},
+  artists(){const m=new Map();this.tracks.forEach(t=>{if(!m.has(t.artist))m.set(t.artist,[]);m.get(t.artist).push(t.id)});return [...m].map(([name,ids])=>({name,ids})).sort((a,b)=>b.ids.length-a.ids.length)},
+  byArtist(n){return this.tracks.filter(t=>t.artist===n).map(t=>t.id)},
+  likedIds(){return [...this.liked].filter(id=>this.get(id)).reverse()},
+  pl(id){return this.playlists.find(p=>p.id===id)},
+  plIds(p){return p.tracks.filter(id=>this.get(id))},
+  savePl(){store.set('playlists',this.playlists)},
+  createPl(name,first){const p={id:'p'+Date.now().toString(36),name,tracks:first?[first]:[],at:Date.now()};this.playlists.unshift(p);this.savePl();return p},
+  renamePl(id,name){const p=this.pl(id);if(p){p.name=name;this.savePl()}},
+  deletePl(id){this.playlists=this.playlists.filter(p=>p.id!==id);this.savePl()},
+  addTo(pid,tid){const p=this.pl(pid);if(!p||p.tracks.includes(tid))return false;p.tracks.push(tid);p.at=Date.now();this.savePl();return true},
+  removeFrom(pid,tid){const p=this.pl(pid);if(p){p.tracks=p.tracks.filter(x=>x!==tid);this.savePl()}},
+  toggleLike(id){if(this.liked.has(id))this.liked.delete(id);else this.liked.add(id);store.set('liked',[...this.liked]);return this.liked.has(id)},
+  pushRecent(id){this.recent=[id,...this.recent.filter(x=>x!==id)].slice(0,12);store.set('recent',this.recent)},
+  purge(){
+    const ok=id=>!!this.get(id);
+    this.playlists=this.playlists.filter(p=>!p.example);this.playlists.forEach(p=>p.tracks=p.tracks.filter(ok));this.savePl();
+    this.liked=new Set([...this.liked].filter(ok));store.set('liked',[...this.liked]);
+    this.recent=this.recent.filter(ok);store.set('recent',this.recent);
+  }
+};
+function addTrack(rec){
+  const t={id:rec.id,title:rec.title,artist:rec.artist,album:rec.album||'',added:rec.added||0,blob:rec.blob,hue:hueOf(rec.artist+rec.title),dur:rec.dur||NaN,url:null,cover:null,tint:rec.tint||null};
+  if(rec.pic){try{t.cover=URL.createObjectURL(rec.pic)}catch(e){}}
+  lib.tracks.push(t);return t;
+}
+async function finishTrack(t,rec){
+  if(t.cover&&!t.tint){t.tint=await tintOf(t.cover);if(t.tint){rec.tint=t.tint;idb.put(rec)}}
+  if(!isFinite(t.dur)){await new Promise(res=>{const a=new Audio();a.preload='metadata';const u=URL.createObjectURL(t.blob);a.src=u;a.onloadedmetadata=()=>{t.dur=a.duration;rec.dur=a.duration;idb.put(rec);URL.revokeObjectURL(u);res()};a.onerror=()=>{URL.revokeObjectURL(u);res()};setTimeout(res,4000)})}
+}
+
+/* ================= Art and colour helpers ================= */
+function bgFor(t){return t&&t.cover?`url("${t.cover}")`:`linear-gradient(135deg,hsl(${t?t.hue:20} 45% 30%),hsl(${t?(t.hue+40)%360:60} 40% 14%))`}
+function tArt(t,cls=''){return `<span class="art ${cls}" style="background-image:${bgFor(t)}" aria-hidden="true">${t&&t.cover?'':`<span class="glyph">${ic('note','')}</span>`}</span>`}
+function band(t,fallback){const c=t&&t.tint?t.tint:fallback||{h:t?t.hue:260,s:40};const s=Math.min(70,Math.max(25,c.s));return {a:`hsl(${c.h} ${s}% 42%)`,b:`hsl(${c.h} ${s}% 20%)`,mini:`hsl(${c.h} ${Math.min(55,s)}% 17%)`,bar:`hsl(${c.h} ${Math.min(55,s)}% 22%)`}}
+function glyphArt(name,round,cls=''){return `<span class="art ${round?'round':''} ${cls}" style="background-image:linear-gradient(135deg,hsl(${hueOf(name)} 40% 32%),hsl(${(hueOf(name)+40)%360} 35% 14%))" aria-hidden="true"><span class="glyph">${ic(round?'person':'note','')}</span></span>`}
+function artistArt(name,cls=''){const t=lib.byArtist(name).map(i=>lib.get(i)).find(x=>x.cover);return t?`<span class="art round ${cls}" style="background-image:url('${t.cover}')" aria-hidden="true"></span>`:glyphArt(name,true,cls)}
+function plArt(p,cls=''){const t=lib.plIds(p).map(i=>lib.get(i)).find(x=>x.cover)||lib.get(lib.plIds(p)[0]);return t?tArt(t,cls):glyphArt(p.name,false,cls)}
+const LIKED_TINT={h:262,s:62};
+function likedArt(cls=''){return `<span class="art ${cls}" style="background-image:linear-gradient(135deg,hsl(262 62% 46%),hsl(222 70% 62%))" aria-hidden="true"><span class="glyph" style="color:#fff">${ic('heartOn','')}</span></span>`}
 
 /* ================= Player ================= */
 const player={ctx:[],pos:-1,ctxName:'',ctxKey:'',up:[],shuffle:store.get('shuf',false),repeat:store.get('rep','off'),timer:null,timerEnd:0,endOfTrack:false,
@@ -360,14 +416,9 @@ function playContext(ids,startId,name,key){
 }
 let loadToken=0;
 async function load(id){
-  const t=lib.get(id);if(!t)return;
-  const my=++loadToken;
-  lib.pushRecent(id);paintPlayer();refreshRows();
-  if(!t.url){
-    if(t.demo){$('#miniA').textContent='Préparation du son…';try{t.url=await synth(t)}catch(e){toast('Ce navigateur ne peut pas générer les titres de démo.');return}}
-    else if(t.blob)t.url=URL.createObjectURL(t.blob);
-    else{toast('Ce fichier n’est plus disponible. Importe-le à nouveau.');return}
-  }
+  const t=lib.get(id);if(!t)return;const my=++loadToken;
+  lib.pushRecent(id);paintPlayer();
+  if(!t.url){if(t.blob)t.url=URL.createObjectURL(t.blob);else{toast('Ce fichier n’est plus disponible. Importe-le à nouveau.');return}}
   if(my!==loadToken)return;
   audio.src=t.url;
   try{await audio.play()}catch(e){toast('Touche lecture pour démarrer.')}
@@ -381,12 +432,9 @@ function next(auto){
   }
   player.pos++;load(player.ctx[player.pos]);
 }
-function prev(){
-  if(audio.currentTime>3||player.pos<=0){audio.currentTime=0;return}
-  player.pos--;load(player.ctx[player.pos]);
-}
+function prev(){if(audio.currentTime>3||player.pos<=0){audio.currentTime=0;return}player.pos--;load(player.ctx[player.pos])}
 function toggle(){
-  if(!player.cur()){const ids=lib.recent.length?lib.recent:lib.tracks.map(t=>t.id);return playContext(ids,ids[0],'Écoutés récemment','recent')}
+  if(!player.cur()){const r=lib.recent.filter(i=>lib.get(i));const ids=r.length?r:lib.allIds();if(!ids.length){toast('Importe d’abord de la musique depuis la Bibliothèque.');return}return playContext(ids,ids[0],'Écoutés récemment','recent')}
   audio.paused?audio.play().catch(()=>{}):audio.pause();
 }
 audio.addEventListener('play',paintPlayer);audio.addEventListener('pause',paintPlayer);
@@ -395,7 +443,7 @@ audio.addEventListener('ended',()=>{
   if(player.repeat==='one'){audio.currentTime=0;audio.play();return}
   next(true);
 });
-audio.addEventListener('loadedmetadata',()=>{const t=player.cur();if(t&&isFinite(audio.duration))t.dur=audio.duration});
+audio.addEventListener('error',()=>{if(audio.getAttribute('src'))toast('Ce format ne peut pas être lu sur cet appareil.')});
 let dragging=false;
 audio.addEventListener('timeupdate',()=>{
   const p=audio.duration?audio.currentTime/audio.duration:0;
@@ -407,83 +455,60 @@ $('#seek').addEventListener('input',e=>{dragging=true;const v=e.target.value;e.t
 $('#seek').addEventListener('change',e=>{if(audio.duration)audio.currentTime=e.target.value/1000*audio.duration;dragging=false});
 function mediaSession(t){
   if(!('mediaSession'in navigator))return;
-  try{navigator.mediaSession.metadata=new MediaMetadata({title:t.title,artist:t.artist,album:'Onde'});
+  try{const md={title:t.title,artist:t.artist,album:t.album||'Onde'};if(t.cover)md.artwork=[{src:t.cover,sizes:'512x512'}];navigator.mediaSession.metadata=new MediaMetadata(md);
     navigator.mediaSession.setActionHandler('play',()=>audio.play());navigator.mediaSession.setActionHandler('pause',()=>audio.pause());
     navigator.mediaSession.setActionHandler('previoustrack',prev);navigator.mediaSession.setActionHandler('nexttrack',()=>next());}catch(e){}
 }
 function setShuffle(on){
   player.shuffle=on;store.set('shuf',on);
-  const cur=player.ctx[player.pos];
-  if(cur){const before=player.ctx.slice(0,player.pos+1),rest=player.ctx.slice(player.pos+1);player.ctx=before.concat(on?shuffled(rest):rest)}
+  if(player.cur()){const before=player.ctx.slice(0,player.pos+1),rest=player.ctx.slice(player.pos+1);player.ctx=before.concat(on?shuffled(rest):rest)}
 }
 function setTimer(min){
   clearTimeout(player.timer);player.timer=null;player.timerEnd=0;player.endOfTrack=false;
-  if(min==='end'){player.endOfTrack=true}
+  if(min==='end')player.endOfTrack=true;
   else if(min>0){player.timerEnd=Date.now()+min*60000;player.timer=setTimeout(()=>{audio.pause();player.timerEnd=0;paintTimer();toast('Minuteur terminé. Bonne nuit.')},min*60000)}
   paintTimer();
 }
-function paintTimer(){
-  const b=$('#timerBtn');const on=player.endOfTrack||player.timerEnd;
-  b.classList.toggle('on',!!on);
-  b.innerHTML=ic('moon')+(player.endOfTrack?'Fin du titre':player.timerEnd?Math.max(1,Math.ceil((player.timerEnd-Date.now())/60000))+' min':'Minuteur');
-}
+function paintTimer(){const b=$('#timerBtn'),on=player.endOfTrack||player.timerEnd;b.classList.toggle('on',!!on);b.innerHTML=ic('moon')+(player.endOfTrack?'Fin du titre':player.timerEnd?Math.max(1,Math.ceil((player.timerEnd-Date.now())/60000))+' min':'Minuteur')}
 setInterval(()=>{if(player.timerEnd)paintTimer()},30000);
-
-/* ---- visualizer ---- */
-let actx,analyser;
-audio.addEventListener('play',()=>{
-  if(!analyser){try{const AC=window.AudioContext||window.webkitAudioContext;actx=new AC();const s=actx.createMediaElementSource(audio);analyser=actx.createAnalyser();analyser.fftSize=64;s.connect(analyser);analyser.connect(actx.destination)}catch(e){}}
-  if(actx&&actx.state==='suspended')actx.resume();
-});
-const cv=$('#viz'),cx=cv.getContext('2d');
-function draw(){
-  if($('#sheet').classList.contains('open')&&analyser){
-    const w=cv.width=cv.clientWidth*devicePixelRatio,h=cv.height=cv.clientHeight*devicePixelRatio;
-    cx.clearRect(0,0,w,h);
-    if(!audio.paused){const d=new Uint8Array(analyser.frequencyBinCount);analyser.getByteFrequencyData(d);const n=24,bw=w/n;cx.fillStyle='rgba(255,255,255,.5)';for(let i=0;i<n;i++){const bh=d[i]/255*h*.42;cx.fillRect(i*bw+bw*.2,h-bh,bw*.6,bh)}}
-  }
-  requestAnimationFrame(draw);
-}
-if(matchMedia('(prefers-reduced-motion: no-preference)').matches)requestAnimationFrame(draw);
 
 /* ================= Views ================= */
 const ctxs={};
-let route={v:'home'},stack=[],libFilter=store.get('libf','all'),libSort=store.get('libs','recent'),query='';
-function go(r,push=true){if(push)stack.push(route);route=r;render();view.scrollTop=0}
-function back(){route=stack.pop()||{v:'home'};render()}
+let route={v:'home'},stack=[],libFilter=store.get('libf','all'),libSort=store.get('libs','recent'),query='',cQuery='',cSort=store.get('csort','added');
+function go(r,push=true){if(push)stack.push(route);route=r;cQuery='';render();view.scrollTop=0}
+function back(){route=stack.pop()||{v:'home'};cQuery='';render();view.scrollTop=0}
 function tab(v){stack=[];route={v};render();view.scrollTop=0}
-
-function art(hue,cls='',inner=''){return `<span class="art ${cls}" style="background:${artBg(hue)}" aria-hidden="true">${inner}</span>`}
-function likedArt(cls=''){return `<span class="art ${cls}" style="background:linear-gradient(135deg,var(--accent),#C24BFF)" aria-hidden="true"><span class="glyph">${ic('heartOn')}</span></span>`}
-function trackRow(id,key,opts={}){
-  const t=lib.get(id);if(!t)return'';const cur=player.cur();
-  return `<div class="row${cur&&cur.id===id?' on':''}" data-row="${esc(id)}">
-    <button data-act="play" data-id="${esc(id)}" data-ctx="${esc(key)}" aria-label="Lire ${esc(t.title)}">${art(t.hue)}</button>
-    <button class="meta" data-act="play" data-id="${esc(id)}" data-ctx="${esc(key)}"><b>${esc(t.title)}</b><span>${lib.liked.has(id)?`<i class="heart-sm" aria-label="Liké">${ic('heartOn','')}</i>`:''}${t.demo?'<em class="tag">démo</em>':''}${opts.hideArtist?fmt(t.dur):esc(t.artist)}</span></button>
-    <div class="side"><button class="icon" data-act="more" data-id="${esc(id)}" data-ctx="${esc(key)}" aria-label="Options pour ${esc(t.title)}">${ic('more')}</button></div>
-  </div>`;
-}
 function setCtx(key,name,ids){ctxs[key]={name,ids};return key}
 
+function trackRow(id,key){
+  const t=lib.get(id);if(!t)return'';const cur=player.cur();
+  return `<div class="row${cur&&cur.id===id?' on':''}" data-row="${esc(id)}">
+    <button data-act="play" data-id="${esc(id)}" data-ctx="${esc(key)}" aria-label="Lire ${esc(t.title)}">${tArt(t)}</button>
+    <button class="meta" data-act="play" data-id="${esc(id)}" data-ctx="${esc(key)}"><b><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span>${esc(t.title)}</span></b><span>${esc(t.artist)}</span></button>
+    <button class="icon side" data-act="more" data-id="${esc(id)}" data-ctx="${esc(key)}" aria-label="Options pour ${esc(t.title)}">${ic('more')}</button>
+  </div>`;
+}
+function importBlock(){return `<div class="welcome"><div class="disc" aria-hidden="true"></div><h1>Ta musique, ici</h1><p>Importe tes fichiers MP3 ou M4A depuis l’app Fichiers. Le titre, l’artiste et la pochette sont lus automatiquement.</p><button class="pill" data-act="import">${ic('plus')}Importer de la musique</button></div>`}
+
 function vHome(){
-  const h=new Date().getHours();
-  const hello=h<5?'Bonne nuit':h<12?'Bonjour':h<18?'Bon après-midi':'Bonsoir';
+  if(!lib.tracks.length)return importBlock();
+  const h=new Date().getHours(),hello=h<5?'Bonne nuit':h<12?'Bonjour':h<18?'Bon après-midi':'Bonsoir';
   const shorts=[`<button class="short" data-act="open" data-k="liked">${likedArt()}<b>Titres likés</b></button>`]
-    .concat(lib.playlists.slice(0,3).map(p=>`<button class="short" data-act="open" data-k="pl:${esc(p.id)}">${art(lib.plArt(p))}<b>${esc(p.name)}</b></button>`))
-    .concat(lib.artists().slice(0,2).map(a=>`<button class="short" data-act="open" data-k="artist:${esc(a.name)}">${art(a.hue,'round',`<span class="ini">${esc(initials(a.name))}</span>`)}<b>${esc(a.name)}</b></button>`)).slice(0,6);
+    .concat(lib.playlists.slice(0,3).map(p=>`<button class="short" data-act="open" data-k="pl:${esc(p.id)}">${plArt(p)}<b>${esc(p.name)}</b></button>`))
+    .concat([`<button class="short" data-act="open" data-k="files">${tArt(lib.tracks[0])}<b>Tous mes titres</b></button>`])
+    .concat(lib.artists().slice(0,2).map(a=>`<button class="short" data-act="open" data-k="artist:${esc(a.name)}">${artistArt(a.name)}<b>${esc(a.name)}</b></button>`)).slice(0,6);
   const recent=lib.recent.filter(id=>lib.get(id));
-  const recentIds=recent.length?recent:lib.tracks.slice(0,6).map(t=>t.id);
-  setCtx('recent',recent.length?'Écoutés récemment':'À découvrir',recentIds);
-  const files=lib.files();
+  setCtx('recent','Écoutés récemment',recent);
+  const added=lib.tracks.slice().sort((a,b)=>b.added-a.added).slice(0,10).map(t=>t.id);
+  setCtx('added','Ajoutés récemment',added);
+  const shelf=(ids,key)=>`<div class="shelf">${ids.map(id=>{const t=lib.get(id);return `<button class="card" data-act="play" data-id="${esc(id)}" data-ctx="${key}">${tArt(t)}<b>${esc(t.title)}</b><span>${esc(t.artist)}</span></button>`}).join('')}</div>`;
   return `<div class="top"><h1>${hello}</h1></div>
   <div class="shortcuts">${shorts.join('')}</div>
-  <h2>${recent.length?'Écoutés récemment':'Pour commencer'}</h2>
-  <div class="shelf">${recentIds.map(id=>{const t=lib.get(id);return `<button class="card" data-act="play" data-id="${esc(id)}" data-ctx="recent">${art(t.hue)}<b>${esc(t.title)}</b><span>${esc(t.artist)}</span></button>`}).join('')}</div>
-  <h2>Tes playlists</h2>
-  ${lib.playlists.length?`<div class="shelf">${lib.playlists.map(p=>`<button class="card" data-act="open" data-k="pl:${esc(p.id)}">${art(lib.plArt(p))}<b>${esc(p.name)}</b><span>${p.tracks.length} titre${p.tracks.length>1?'s':''}</span></button>`).join('')}<button class="card" data-act="new-pl"><span class="art" style="background:var(--deck);display:grid;place-items:center;border-radius:10px;aspect-ratio:1">${ic('plus')}</span><b>Nouvelle playlist</b></button></div>`:`<div class="empty"><b>Aucune playlist</b>Crée ta première playlist pour ranger tes titres.<br><br><button class="pill" data-act="new-pl">${ic('plus')}Créer une playlist</button></div>`}
+  ${recent.length?`<h2>Écoutés récemment</h2>${shelf(recent,'recent')}`:''}
+  <h2>Ajoutés récemment</h2>${shelf(added,'added')}
+  ${lib.playlists.length?`<h2>Tes playlists</h2><div class="shelf">${lib.playlists.map(p=>`<button class="card" data-act="open" data-k="pl:${esc(p.id)}">${plArt(p)}<b>${esc(p.name)}</b><span>${plural(lib.plIds(p).length,'titre')}</span></button>`).join('')}</div>`:''}
   <h2>Artistes</h2>
-  <div class="shelf">${lib.artists().map(a=>`<button class="card artist" data-act="open" data-k="artist:${esc(a.name)}">${art(a.hue,'round',`<span class="ini" style="font-size:34px">${esc(initials(a.name))}</span>`)}<b>${esc(a.name)}</b><span>Artiste</span></button>`).join('')}</div>
-  ${files.length?'':`<h2>Ta musique</h2><div class="empty" style="padding-top:4px"><b>Ajoute tes propres fichiers</b>MP3, M4A, WAV… depuis l’app Fichiers de ton iPhone. Ils restent sur ton téléphone.<br><br><button class="pill" data-act="import">${ic('plus')}Importer de la musique</button></div>`}`;
+  <div class="shelf">${lib.artists().map(a=>`<button class="card artist" data-act="open" data-k="artist:${esc(a.name)}">${artistArt(a.name)}<b>${esc(a.name)}</b><span>Artiste</span></button>`).join('')}</div>`;
 }
 
 function vSearch(){
@@ -491,19 +516,25 @@ function vSearch(){
   <div class="field" style="margin-top:10px">${ic('search')}<input class="search" id="q" type="search" placeholder="Titres, artistes, playlists" value="${esc(query)}" autocomplete="off" aria-label="Rechercher"></div>
   <div id="results">${searchResults()}</div>`;
 }
-P.search='M10 3a7 7 0 1 0 4.3 12.5l5.3 5.3 1.4-1.4-5.3-5.3A7 7 0 0 0 10 3zm0 2a5 5 0 1 1 0 10 5 5 0 0 1 0-10z';
 function searchResults(){
   const q=query.trim().toLowerCase();
-  if(!q)return `<h2>Parcourir par ambiance</h2><div class="moods">${Object.entries(MOODS).map(([m,o])=>`<button class="mood" style="background:hsl(${o.hue} 60% 38%)" data-act="open" data-k="mood:${esc(m)}"><span>${esc(m)}</span><i style="background:${artBg(o.hue+30)}"></i></button>`).join('')}<button class="mood" style="background:hsl(330 55% 38%)" data-act="open" data-k="liked"><span>Titres likés</span><i style="background:linear-gradient(135deg,var(--accent),#C24BFF)"></i></button><button class="mood" style="background:hsl(220 45% 34%)" data-act="open" data-k="files"><span>Mes fichiers</span><i style="background:${artBg(220)}"></i></button></div>`;
-  const has=s=>s.toLowerCase().includes(q);
-  const tr=lib.tracks.filter(t=>has(t.title)||has(t.artist)).map(t=>t.id);
+  if(!lib.tracks.length)return `<div class="empty"><b>Rien à chercher pour l’instant</b>Importe ta musique depuis la Bibliothèque.</div>`;
+  if(!q){
+    const tile=(k,label,artHtml,hue)=>`<button class="mood" style="background:hsl(${hue} 50% 34%)" data-act="open" data-k="${esc(k)}"><span>${esc(label)}</span>${artHtml}</button>`;
+    const tiles=[tile('liked','Titres likés',likedArt(),255),tile('files','Tous mes titres',tArt(lib.tracks[0]),20)]
+      .concat(lib.playlists.slice(0,4).map(p=>{const t=lib.get(lib.plIds(p)[0]);return tile('pl:'+p.id,p.name,plArt(p),t&&t.tint?t.tint.h:hueOf(p.name))}))
+      .concat(lib.artists().slice(0,6).map(a=>{const t=lib.get(a.ids[0]);return tile('artist:'+a.name,a.name,artistArt(a.name),t&&t.tint?t.tint.h:hueOf(a.name))}));
+    return `<h2>Parcourir</h2><div class="moods">${tiles.join('')}</div>`;
+  }
+  const has=s=>(s||'').toLowerCase().includes(q);
+  const tr=lib.tracks.filter(t=>has(t.title)||has(t.artist)||has(t.album)).map(t=>t.id);
   const ar=lib.artists().filter(a=>has(a.name));
   const pl=lib.playlists.filter(p=>has(p.name));
   if(!tr.length&&!ar.length&&!pl.length)return `<div class="empty"><b>Rien pour « ${esc(query.trim())} »</b>Vérifie l’orthographe, ou essaie un nom d’artiste.</div>`;
   setCtx('search','Résultats de recherche',tr);
   let h='';
-  if(ar.length)h+=`<h2>Artistes</h2><div class="list">${ar.map(a=>`<button class="row" data-act="open" data-k="artist:${esc(a.name)}">${art(a.hue,'round',`<span class="ini" style="font-size:16px">${esc(initials(a.name))}</span>`)}<span class="meta"><b>${esc(a.name)}</b><span>Artiste</span></span><span></span></button>`).join('')}</div>`;
-  if(pl.length)h+=`<h2>Playlists</h2><div class="list">${pl.map(p=>`<button class="row" data-act="open" data-k="pl:${esc(p.id)}">${art(lib.plArt(p))}<span class="meta"><b>${esc(p.name)}</b><span>Playlist · ${p.tracks.length} titre${p.tracks.length>1?'s':''}</span></span><span></span></button>`).join('')}</div>`;
+  if(ar.length)h+=`<h2>Artistes</h2><div class="list">${ar.map(a=>`<button class="row" data-act="open" data-k="artist:${esc(a.name)}">${artistArt(a.name)}<span class="meta"><b><span>${esc(a.name)}</span></b><span>Artiste</span></span><span></span></button>`).join('')}</div>`;
+  if(pl.length)h+=`<h2>Playlists</h2><div class="list">${pl.map(p=>`<button class="row" data-act="open" data-k="pl:${esc(p.id)}">${plArt(p)}<span class="meta"><b><span>${esc(p.name)}</span></b><span>Playlist · ${plural(lib.plIds(p).length,'titre')}</span></span><span></span></button>`).join('')}</div>`;
   if(tr.length)h+=`<h2>Titres</h2><div class="list">${tr.map(id=>trackRow(id,'search')).join('')}</div>`;
   return h;
 }
@@ -511,67 +542,108 @@ function searchResults(){
 function vLibrary(){
   let items=[];
   if(libFilter==='all'||libFilter==='playlists'){
-    items.push({k:'liked',name:'Titres likés',sub:`Playlist · ${lib.liked.size} titre${lib.liked.size>1?'s':''}`,art:likedArt(),at:Infinity});
-    lib.playlists.forEach(p=>items.push({k:'pl:'+p.id,name:p.name,sub:`Playlist · ${p.tracks.length} titre${p.tracks.length>1?'s':''}${p.example?' · exemple':''}`,art:art(lib.plArt(p)),at:p.at}));
+    items.push({k:'liked',name:'Titres likés',sub:'Playlist · '+plural(lib.likedIds().length,'titre'),art:likedArt(),at:Infinity});
+    lib.playlists.forEach(p=>items.push({k:'pl:'+p.id,name:p.name,sub:'Playlist · '+plural(lib.plIds(p).length,'titre'),art:plArt(p),at:p.at}));
   }
-  if(libFilter==='all'||libFilter==='artists')lib.artists().forEach(a=>items.push({k:'artist:'+a.name,name:a.name,sub:'Artiste',art:art(a.hue,'round',`<span class="ini" style="font-size:16px">${esc(initials(a.name))}</span>`),at:0}));
-  if(libFilter==='all'||libFilter==='files'){const n=lib.files().length;items.push({k:'files',name:'Mes fichiers',sub:n?`${n} fichier${n>1?'s':''} sur ce téléphone`:'Importer depuis l’app Fichiers',art:`<span class="art" style="background:var(--deck-2);display:grid;place-items:center;width:50px;height:50px;border-radius:6px">${ic('file')}</span>`,at:n?1:-1})}
-  if(libSort==='az')items.sort((a,b)=>a.k==='liked'?-1:b.k==='liked'?1:a.name.localeCompare(b.name,'fr'));
-  else items.sort((a,b)=>b.at-a.at);
+  if(libFilter==='all'||libFilter==='artists')lib.artists().forEach(a=>items.push({k:'artist:'+a.name,name:a.name,sub:'Artiste',art:artistArt(a.name),at:0}));
+  if(libFilter==='all'||libFilter==='files')items.push({k:'files',name:'Tous mes titres',sub:lib.tracks.length?plural(lib.tracks.length,'titre')+' sur ce téléphone':'Importer depuis l’app Fichiers',art:lib.tracks.length?tArt(lib.tracks[0]):glyphArt('f',false),at:1});
+  if(libSort==='az')items.sort((a,b)=>a.k==='liked'?-1:b.k==='liked'?1:a.name.localeCompare(b.name,'fr'));else items.sort((a,b)=>b.at-a.at);
   const chip=(f,l)=>`<button class="chip" data-act="libf" data-f="${f}" aria-pressed="${libFilter===f}">${l}</button>`;
   return `<div class="top"><h1>Bibliothèque</h1><button class="icon" data-act="import" aria-label="Importer de la musique">${ic('file')}</button><button class="icon" data-act="new-pl" aria-label="Créer une playlist">${ic('plus')}</button></div>
-  <div class="chips">${chip('all','Tout')}${chip('playlists','Playlists')}${chip('artists','Artistes')}${chip('files','Fichiers')}</div>
+  <div class="chips">${chip('all','Tout')}${chip('playlists','Playlists')}${chip('artists','Artistes')}${chip('files','Titres')}</div>
   <div class="toolbar"><button data-act="libsort">${ic('sort')}${libSort==='az'?'Ordre alphabétique':'Récents'}</button></div>
-  <div class="list">${items.map(it=>`<button class="row" data-act="open" data-k="${esc(it.k)}">${it.art.replace('class="art','class="art')}<span class="meta"><b>${esc(it.name)}</b><span>${esc(it.sub)}</span></span><span></span></button>`).join('')}</div>`;
+  <div class="list">${items.map(it=>`<button class="row" data-act="open" data-k="${esc(it.k)}">${it.art}<span class="meta"><b><span>${esc(it.name)}</span></b><span>${esc(it.sub)}</span></span><span></span></button>`).join('')}</div>
+  ${lib.tracks.length?'':importBlock()}`;
 }
 
+function collInfo(k){
+  if(!k)return null;
+  if(k==='liked')return {title:'Titres likés',ids:lib.likedIds(),tint:LIKED_TINT,find:'Rechercher dans les Titres likés'};
+  if(k==='files')return {title:'Tous mes titres',ids:lib.tracks.slice().sort((a,b)=>b.added-a.added).map(t=>t.id),find:'Rechercher dans tes titres',add:'import'};
+  if(k.startsWith('pl:')){const p=lib.pl(k.slice(3));if(!p)return null;return {title:p.name,ids:lib.plIds(p),owner:p,find:'Rechercher dans la playlist',add:'pick'}}
+  if(k.startsWith('artist:')){const n=k.slice(7);return {title:n,ids:lib.byArtist(n),find:'Rechercher chez '+n,artist:true}}
+  return null;
+}
+function sortIds(ids){
+  if(cSort==='added')return ids;
+  return ids.slice().sort((a,b)=>(lib.get(a)[cSort]||'').localeCompare(lib.get(b)[cSort]||'','fr',{sensitivity:'base'}));
+}
+function filteredIds(k){
+  const c=collInfo(k);if(!c)return [];const q=cQuery.trim().toLowerCase();
+  let ids=sortIds(c.ids);
+  if(q)ids=ids.filter(id=>{const t=lib.get(id);return (t.title+' '+t.artist+' '+t.album).toLowerCase().includes(q)});
+  return ids;
+}
+function collList(k){
+  const c=collInfo(k);if(!c)return'';const ids=filteredIds(k);setCtx(k,c.title,ids);
+  const add=c.add==='pick'?`<button class="row addrow" data-act="pick-tracks" data-id="${esc(c.owner.id)}"><span class="art">${ic('plus','')}</span><span class="meta"><b><span>Ajouter des titres</span></b></span><span></span></button>`
+    :c.add==='import'?`<button class="row addrow" data-act="import"><span class="art">${ic('plus','')}</span><span class="meta"><b><span>Importer des titres</span></b></span><span></span></button>`:'';
+  if(!c.ids.length){
+    const msg=k==='liked'?['Aucun titre liké','Touche le cœur sur un titre pour le retrouver ici.']:k.startsWith('pl:')?['Cette playlist est vide','Ajoute des titres avec le bouton ci-dessus ou le menu ⋯ d’un morceau.']:['Aucun titre','Importe des MP3 ou M4A depuis l’app Fichiers.'];
+    return add+`<div class="empty"><b>${msg[0]}</b>${msg[1]}</div>`;
+  }
+  if(!ids.length)return `<div class="empty"><b>Aucun résultat</b>Rien ne correspond à « ${esc(cQuery.trim())} » ici.</div>`;
+  return (cQuery?'':add)+ids.map(id=>trackRow(id,k)).join('');
+}
 function collection(k){
-  let title,kind,ids,head,empty,owner=null;
-  if(k==='liked'){title='Titres likés';kind='Playlist';ids=lib.likedIds();head=likedArt();empty=['Aucun titre liké','Touche le cœur sur un titre pour le retrouver ici.']}
-  else if(k==='files'){title='Mes fichiers';kind='Sur ce téléphone';ids=lib.files();head=`<span class="art" style="background:${artBg(220)}"><span class="glyph">${ic('file')}</span></span>`;empty=['Aucun fichier','Importe des MP3, M4A ou WAV depuis l’app Fichiers. Nomme-les « Artiste - Titre » pour un classement automatique.']}
-  else if(k.startsWith('pl:')){const p=lib.pl(k.slice(3));if(!p)return `<div class="empty"><b>Playlist introuvable</b>Elle a peut-être été supprimée.</div>`;owner=p;title=p.name;kind=p.example?'Playlist · exemple':'Playlist';ids=p.tracks.filter(id=>lib.get(id));head=art(lib.plArt(p));empty=['Cette playlist est vide','Ajoute des titres avec le menu ⋯ à côté de chaque morceau.']}
-  else if(k.startsWith('artist:')){title=k.slice(7);kind='Artiste';ids=lib.byArtist(title);head=art(hueOf(title),'round',`<span class="ini" style="font-size:56px">${esc(initials(title))}</span>`);empty=['Aucun titre','Cet artiste n’a plus de titres dans ta bibliothèque.']}
-  else if(k.startsWith('mood:')){title=k.slice(5);kind='Ambiance';ids=lib.byMood(title);head=art((MOODS[title]||{hue:0}).hue);empty=['Rien ici pour l’instant','']}
-  setCtx(k,title,ids);
-  const total=ids.reduce((s,id)=>s+(isFinite(lib.get(id).dur)?lib.get(id).dur:0),0);
-  return `<div class="top"><button class="icon" data-act="back" aria-label="Retour">${ic('back')}</button></div>
-  <div class="chead">${head}<div class="ctitle"><h1>${esc(title)}</h1><p>${esc(kind)} · ${ids.length} titre${ids.length>1?'s':''}${total?' · '+longFmt(total):''}</p></div>
-  <div class="cact">${owner?`<button class="icon" data-act="pl-menu" data-id="${esc(owner.id)}" aria-label="Options de la playlist">${ic('more')}</button>`:''}${k==='files'?`<button class="pill ghost" data-act="import">${ic('plus')}Importer</button>`:''}<span class="grow"></span>
-  <button class="icon mode ${player.shuffle?'active':''}" data-act="shuffle" aria-label="Lecture aléatoire" aria-pressed="${player.shuffle}">${ic('shuffle')}</button>
-  ${ids.length?`<button class="bigplay" data-act="play-ctx" data-ctx="${esc(k)}" aria-label="Tout lire">${ic(player.ctxKey===k&&!audio.paused?'pause':'play')}</button>`:''}</div></div>
-  <div class="list" style="margin-top:14px">${ids.length?ids.map(id=>trackRow(id,k,{hideArtist:k.startsWith('artist:')})).join(''):`<div class="empty"><b>${empty[0]}</b>${empty[1]}</div>`}</div>`;
+  const c=collInfo(k);
+  if(!c)return `<div class="top"><button class="icon" data-act="back" aria-label="Retour">${ic('back')}</button></div><div class="empty"><b>Introuvable</b>Cette playlist a peut-être été supprimée.</div>`;
+  const first=lib.get(c.ids[0]);const col=band(first,c.tint||(first?null:{h:hueOf(c.title),s:35}));
+  const playing=player.ctxKey===k&&!audio.paused;
+  const thumb=c.artist?artistArt(c.title):k==='liked'?likedArt():first?tArt(first):glyphArt(c.title,false);
+  return `<div class="coll" style="--band:${col.a};--band-2:${col.b}" data-bar="${col.bar}">
+    <div class="ctop"><button class="round-btn" data-act="back" aria-label="Retour">${ic('back')}</button></div>
+    <div class="cfind"><label>${ic('search')}<input id="cq" type="search" placeholder="${esc(c.find)}" value="${esc(cQuery)}" autocomplete="off" aria-label="${esc(c.find)}"></label><button data-act="csort">Trier</button></div>
+    <div class="ctitle"><h1>${esc(c.title)}</h1><p>${c.artist?'Artiste · ':''}${plural(c.ids.length,'titre')}</p></div>
+    <div class="cact"><span class="thumb">${thumb}</span>
+      ${c.owner?`<button class="icon" data-act="pl-menu" data-id="${esc(c.owner.id)}" aria-label="Options de la playlist">${ic('more')}</button>`:''}
+      <span class="grow"></span>
+      <button class="icon mode ${player.shuffle?'active':''}" data-act="shuffle" aria-label="Lecture aléatoire" aria-pressed="${player.shuffle}">${ic('shuffle')}</button>
+      ${c.ids.length?`<button class="bigplay" data-act="play-ctx" data-ctx="${esc(k)}" aria-label="${playing?'Pause':'Tout lire'}">${ic(playing?'pause':'play')}</button>`:''}
+    </div>
+  </div>
+  <div class="list" id="clist" style="margin-top:14px">${collList(k)}</div>`;
 }
 
 function vQueue(){
-  const cur=player.cur();
-  const nextIds=player.ctx.slice(player.pos+1,player.pos+31);
+  const cur=player.cur(),nextIds=player.ctx.slice(player.pos+1,player.pos+31);
   setCtx('queue','File d’attente',player.ctx);
   return `<div class="top"><button class="icon" data-act="back" aria-label="Retour">${ic('back')}</button><h1>File d’attente</h1></div>
   ${cur?`<div class="qlabel">En cours</div><div class="list">${trackRow(cur.id,'queue')}</div>`:`<div class="empty"><b>Rien en lecture</b>Lance un titre pour voir la suite ici.</div>`}
-  ${player.up.length?`<div class="qlabel">Ajoutés par toi<button data-act="clear-up" style="color:var(--text)">Vider</button></div><div class="list">${player.up.map((id,i)=>{const t=lib.get(id);return `<div class="row"><span>${art(t.hue)}</span><span class="meta"><b>${esc(t.title)}</b><span>${esc(t.artist)}</span></span><div class="side"><button class="icon" data-act="unqueue" data-i="${i}" aria-label="Retirer ${esc(t.title)} de la file">✕</button></div></div>`}).join('')}</div>`:''}
+  ${player.up.length?`<div class="qlabel">Ajoutés par toi<button data-act="clear-up" style="color:var(--text)">Vider</button></div><div class="list">${player.up.map((id,i)=>{const t=lib.get(id);return t?`<div class="row">${tArt(t)}<span class="meta"><b><span>${esc(t.title)}</span></b><span>${esc(t.artist)}</span></span><button class="icon side" data-act="unqueue" data-i="${i}" aria-label="Retirer ${esc(t.title)} de la file">${ic('x')}</button></div>`:''}).join('')}</div>`:''}
   ${nextIds.length?`<div class="qlabel">Ensuite · ${esc(player.ctxName)}</div><div class="list">${nextIds.map(id=>trackRow(id,'queue')).join('')}</div>`:cur?`<div class="qlabel">Ensuite</div><div class="empty" style="padding-top:8px">${player.repeat==='all'?'La liste recommence au début.':'C’est le dernier titre de la liste.'}</div>`:''}`;
 }
 
 function render(){
   let h;
-  if(route.v==='home')h=vHome();
-  else if(route.v==='search')h=vSearch();
-  else if(route.v==='library')h=vLibrary();
-  else if(route.v==='coll')h=collection(route.k);
-  else if(route.v==='queue')h=vQueue();
+  if(route.v==='home')h=vHome();else if(route.v==='search')h=vSearch();else if(route.v==='library')h=vLibrary();
+  else if(route.v==='coll')h=collection(route.k);else h=vQueue();
   view.innerHTML=h;
   const tabV=route.v==='coll'||route.v==='queue'?(stack.find(r=>['home','search','library'].includes(r.v))||{v:'home'}).v:route.v;
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-current',b.dataset.v===tabV?'page':'false'));
   const q=$('#q');if(q)q.addEventListener('input',e=>{query=e.target.value;$('#results').innerHTML=searchResults()});
+  const cq=$('#cq');if(cq)cq.addEventListener('input',e=>{cQuery=e.target.value;$('#clist').innerHTML=collList(route.k)});
+  paintBar();
 }
+function paintBar(){
+  const bar=$('#cbar'),coll=view.querySelector('.coll');
+  if(!coll){bar.classList.remove('show');bar.innerHTML='';bar.setAttribute('aria-hidden','true');return}
+  const c=collInfo(route.k);const playing=player.ctxKey===route.k&&!audio.paused;
+  bar.style.setProperty('--bar',coll.dataset.bar);
+  bar.innerHTML=`<button class="round-btn" data-act="back" aria-label="Retour">${ic('back')}</button><b>${esc(c.title)}</b>${c.ids.length?`<button class="bigplay" data-act="play-ctx" data-ctx="${esc(route.k)}" aria-label="${playing?'Pause':'Tout lire'}">${ic(playing?'pause':'play')}</button>`:'<span></span>'}`;
+  onScroll();
+}
+function onScroll(){const coll=view.querySelector('.coll');const show=!!coll&&view.scrollTop>coll.offsetHeight-40;$('#cbar').classList.toggle('show',show);$('#cbar').setAttribute('aria-hidden',String(!show))}
+view.addEventListener('scroll',onScroll,{passive:true});
 function refreshRows(){
   const cur=player.cur();
   document.querySelectorAll('.row[data-row]').forEach(r=>r.classList.toggle('on',!!cur&&r.dataset.row===cur.id));
-  const bp=document.querySelector('.bigplay');if(bp&&route.v==='coll')bp.innerHTML=ic(player.ctxKey===route.k&&!audio.paused?'pause':'play');
+  if(route.v==='coll'){const pl=player.ctxKey===route.k&&!audio.paused;document.querySelectorAll('.bigplay').forEach(b=>{b.innerHTML=ic(pl?'pause':'play');b.setAttribute('aria-label',pl?'Pause':'Tout lire')})}
 }
 
 function paintPlayer(){
   const t=player.cur(),playing=!audio.paused;
+  document.body.classList.toggle('is-playing',playing);
   $('#mini').hidden=!t;
   document.documentElement.style.setProperty('--mini-h',t?'64px':'0px');
   $('#miniPlay').innerHTML=$('#play').innerHTML=ic(playing?'pause':'play');
@@ -582,39 +654,46 @@ function paintPlayer(){
   $('#rep').setAttribute('aria-label',{off:'Répéter : désactivé',all:'Répéter : la liste',one:'Répéter : ce titre'}[player.repeat]);
   refreshRows();
   if(!t)return;
-  const L=lib.liked.has(t.id);
+  const L=lib.liked.has(t.id),col=band(t);
   $('#miniT').textContent=$('#bigT').textContent=t.title;
-  $('#miniA').textContent=t.artist;$('#bigA').textContent=t.artist;
+  $('#miniA').textContent=$('#bigA').textContent=t.artist;
   $('#ctxName').textContent=player.ctxName||'Bibliothèque';
-  $('#miniArt').style.background=$('#bigArt').style.background=artBg(t.hue);
-  $('#glow').style.background=`radial-gradient(ellipse at 50% 0%,hsl(${t.hue} 80% 45%),transparent 70%)`;
+  $('#miniArt').style.backgroundImage=$('#bigArt').style.backgroundImage=bgFor(t);
+  $('#bigArt').innerHTML=t.cover?'':`<span class="glyph">${ic('note','')}</span>`;
+  $('#mini').style.setProperty('--mini-bg',col.mini);
+  $('#glow').style.background=`linear-gradient(to bottom,${col.a} 0%,${col.b} 45%,var(--ink) 100%)`;
   [$('#miniLike'),$('#bigLike')].forEach(b=>{b.innerHTML=ic(L?'heartOn':'heart');b.classList.toggle('liked',L);b.setAttribute('aria-label',L?'Retirer des titres likés':'Ajouter aux titres likés')});
 }
 
 /* ================= Sheets ================= */
-const scrim=$('#scrim'),modal=$('#modal');
-let lastFocus=null;
-function openModal(html){lastFocus=document.activeElement;modal.innerHTML=html;scrim.hidden=false;const f=modal.querySelector('input,button');f&&f.focus()}
-function closeModal(){scrim.hidden=true;modal.innerHTML='';lastFocus&&lastFocus.focus&&lastFocus.focus()}
+const scrim=$('#scrim'),modal=$('#modal');let lastFocus=null;
+function openModal(html){lastFocus=document.activeElement;modal.innerHTML=html;modal._refresh=null;scrim.hidden=false;const f=modal.querySelector('input,button');f&&f.focus()}
+function closeModal(){scrim.hidden=true;modal.innerHTML='';if(lastFocus&&lastFocus.isConnected)lastFocus.focus()}
 scrim.addEventListener('click',e=>{if(e.target===scrim)closeModal()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!scrim.hidden)closeModal();else if($('#sheet').classList.contains('open'))closePlayer()}});
 
 function trackMenu(id,key){
-  const t=lib.get(id);if(!t)return;const L=lib.liked.has(id);
-  const inPl=key&&key.startsWith('pl:')?key.slice(3):null;
-  openModal(`<div class="mhead">${art(t.hue)}<div style="min-width:0"><b>${esc(t.title)}</b><span>${esc(t.artist)}</span></div></div>
+  const t=lib.get(id);if(!t)return;const L=lib.liked.has(id),inPl=key&&key.startsWith('pl:')?key.slice(3):null;
+  openModal(`<div class="mhead">${tArt(t)}<div style="min-width:0"><b>${esc(t.title)}</b><span>${esc(t.artist)}${t.album?' · '+esc(t.album):''}</span></div></div>
   <button class="mi" data-act="m-like" data-id="${esc(id)}">${ic(L?'heartOn':'heart')}<span class="grow">${L?'Retirer des titres likés':'Ajouter aux titres likés'}</span></button>
   <button class="mi" data-act="m-addpl" data-id="${esc(id)}">${ic('plus')}<span class="grow">Ajouter à une playlist</span></button>
   <button class="mi" data-act="m-queue" data-id="${esc(id)}">${ic('queue')}<span class="grow">Ajouter à la file d’attente</span></button>
   <button class="mi" data-act="m-artist" data-id="${esc(id)}">${ic('person')}<span class="grow">Voir l’artiste</span></button>
-  ${inPl?`<button class="mi" data-act="m-rmpl" data-id="${esc(id)}" data-p="${esc(inPl)}">${ic('back')}<span class="grow">Retirer de cette playlist</span></button>`:''}
-  ${t.demo?'':`<button class="mi danger" data-act="m-delfile" data-id="${esc(id)}">✕<span class="grow">Supprimer de ce téléphone</span></button>`}`);
+  ${inPl?`<button class="mi" data-act="m-rmpl" data-id="${esc(id)}" data-p="${esc(inPl)}">${ic('x')}<span class="grow">Retirer de cette playlist</span></button>`:''}
+  <button class="mi danger" data-act="m-delfile" data-id="${esc(id)}">${ic('x')}<span class="grow">Supprimer de ce téléphone</span></button>`);
 }
 function addToPlMenu(id){
-  const t=lib.get(id);
   openModal(`<div class="mtitle">Ajouter à une playlist</div>
-  <button class="mi" data-act="m-newpl" data-id="${esc(id)}"><span class="art" style="background:var(--deck-2);display:grid;place-items:center;width:44px;height:44px;border-radius:6px">${ic('plus')}</span><span class="grow">Nouvelle playlist</span></button>
-  ${lib.playlists.map(p=>{const has=p.tracks.includes(id);return `<button class="mi${has?' sel':''}" data-act="m-pick" data-id="${esc(id)}" data-p="${esc(p.id)}" ${has?'aria-disabled="true"':''}>${art(lib.plArt(p))}<span class="grow">${esc(p.name)}<br><small>${p.tracks.length} titre${p.tracks.length>1?'s':''}</small></span>${has?ic('check'):''}</button>`}).join('')}`);
+  <button class="mi" data-act="m-newpl" data-id="${esc(id)}"><span class="art" style="background:var(--deck-2);display:grid;place-items:center;width:44px;height:44px;border-radius:4px">${ic('plus')}</span><span class="grow">Nouvelle playlist</span></button>
+  ${lib.playlists.map(p=>{const has=p.tracks.includes(id);return `<button class="mi${has?' sel':''}" data-act="m-pick" data-id="${esc(id)}" data-p="${esc(p.id)}" ${has?'aria-disabled="true"':''}>${plArt(p)}<span class="grow">${esc(p.name)}<br><small>${plural(lib.plIds(p).length,'titre')}</small></span>${has?ic('check'):''}</button>`}).join('')}`);
+}
+function pickTracks(pid){
+  const p=lib.pl(pid);if(!p)return;
+  const list=()=>{const inp=$('#pq'),q=(inp?inp.value:'').trim().toLowerCase();return lib.tracks.filter(t=>!q||(t.title+' '+t.artist).toLowerCase().includes(q)).map(t=>{const has=p.tracks.includes(t.id);return `<button class="mi${has?' sel':''}" data-act="pick-one" data-id="${esc(t.id)}" data-p="${esc(pid)}">${tArt(t)}<span class="grow">${esc(t.title)}<br><small>${esc(t.artist)}</small></span>${ic(has?'check':'plus')}</button>`}).join('')||`<div class="empty">${lib.tracks.length?'Aucun titre ne correspond.':'Importe d’abord de la musique.'}</div>`};
+  openModal(`<div class="mtitle">Ajouter à « ${esc(p.name)} »</div><div class="form" style="padding-top:0"><input id="pq" type="search" placeholder="Rechercher un titre" aria-label="Rechercher un titre"></div><div id="plist"></div><div class="form"><div class="btns"><button class="pill" data-act="m-done">Terminé</button></div></div>`);
+  $('#plist').innerHTML=list();
+  $('#pq').addEventListener('input',()=>{$('#plist').innerHTML=list()});
+  modal._refresh=()=>{$('#plist').innerHTML=list()};
 }
 function nameForm(mode,pid,tid){
   const p=pid?lib.pl(pid):null;
@@ -632,16 +711,21 @@ function nameForm(mode,pid,tid){
 }
 function plMenu(pid,confirm){
   const p=lib.pl(pid);if(!p)return;
-  openModal(`<div class="mhead">${art(lib.plArt(p))}<div style="min-width:0"><b>${esc(p.name)}</b><span>${p.tracks.length} titre${p.tracks.length>1?'s':''}</span></div></div>
+  openModal(`<div class="mhead">${plArt(p)}<div style="min-width:0"><b>${esc(p.name)}</b><span>${plural(lib.plIds(p).length,'titre')}</span></div></div>
   ${confirm?`<p style="margin:10px 2px;line-height:1.5">Supprimer « ${esc(p.name)} » ? Les titres restent dans ta bibliothèque.</p><div class="form"><div class="btns"><button class="pill ghost" data-act="m-close">Annuler</button><button class="pill" style="background:var(--danger)" data-act="m-delpl-yes" data-p="${esc(pid)}">Supprimer</button></div></div>`
   :`<button class="mi" data-act="m-rename" data-p="${esc(pid)}">${ic('sort')}<span class="grow">Renommer</span></button>
+  <button class="mi" data-act="pick-tracks" data-id="${esc(pid)}">${ic('plus')}<span class="grow">Ajouter des titres</span></button>
   <button class="mi" data-act="m-queuepl" data-p="${esc(pid)}">${ic('queue')}<span class="grow">Ajouter à la file d’attente</span></button>
-  <button class="mi danger" data-act="m-delpl" data-p="${esc(pid)}">✕<span class="grow">Supprimer la playlist</span></button>`}`);
+  <button class="mi danger" data-act="m-delpl" data-p="${esc(pid)}">${ic('x')}<span class="grow">Supprimer la playlist</span></button>`}`);
+}
+function sortMenu(){
+  const o=[['added','Date d’ajout'],['title','Titre'],['artist','Artiste'],['album','Album']];
+  openModal(`<div class="mtitle">Trier par</div>${o.map(([v,l])=>`<button class="mi${cSort===v?' sel':''}" data-act="m-sort" data-v="${v}"><span class="grow">${l}</span>${cSort===v?ic('check'):''}</button>`).join('')}`);
 }
 function timerMenu(){
   const opts=[[5,'5 minutes'],[15,'15 minutes'],[30,'30 minutes'],[45,'45 minutes'],[60,'1 heure'],['end','Fin du titre']];
   openModal(`<div class="mtitle">Arrêter la musique dans…</div>${opts.map(([v,l])=>`<button class="mi" data-act="m-timer" data-v="${v}">${ic('moon')}<span class="grow">${l}</span></button>`).join('')}
-  ${player.timerEnd||player.endOfTrack?`<button class="mi danger" data-act="m-timer" data-v="0">✕<span class="grow">Désactiver le minuteur</span></button>`:''}`);
+  ${player.timerEnd||player.endOfTrack?`<button class="mi danger" data-act="m-timer" data-v="0">${ic('x')}<span class="grow">Désactiver le minuteur</span></button>`:''}`);
 }
 
 /* ================= Events ================= */
@@ -650,73 +734,79 @@ function closePlayer(){$('#sheet').classList.remove('open');$('#sheet').setAttri
 let toastT;function toast(m){const e=$('#toast');e.textContent=m;e.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>e.hidden=true,2400)}
 
 document.addEventListener('click',e=>{
-  const b=e.target.closest('[data-act]');if(!b||b.getAttribute('aria-disabled')==='true'&&b.dataset.act==='m-pick'){if(b)toast('Déjà dans cette playlist');return}
+  const b=e.target.closest('[data-act]');if(!b)return;
   const a=b.dataset.act,id=b.dataset.id;
+  if(a==='m-pick'&&b.getAttribute('aria-disabled')==='true'){toast('Déjà dans cette playlist');return}
   switch(a){
     case 'tab':closePlayer();tab(b.dataset.v);break;
     case 'open':go({v:'coll',k:b.dataset.k});break;
     case 'back':back();break;
-    case 'play':{const c=ctxs[b.dataset.ctx];const cur=player.cur();
+    case 'play':{const c=ctxs[b.dataset.ctx],cur=player.cur();
       if(cur&&cur.id===id&&player.ctxKey===b.dataset.ctx){toggle();break}
       if(b.dataset.ctx==='queue'){const i=player.ctx.indexOf(id,player.pos);if(i>=0){player.pos=i;load(id)}break}
       playContext(c?c.ids:[id],id,c?c.name:'',b.dataset.ctx);break}
-    case 'play-ctx':{const k=b.dataset.ctx,c=ctxs[k];if(player.ctxKey===k&&player.cur()){toggle();break}playContext(c.ids,null,c.name,k);break}
+    case 'play-ctx':{const k=b.dataset.ctx,c=ctxs[k];if(player.ctxKey===k&&player.cur()){toggle();break}if(c)playContext(c.ids,null,c.name,k);break}
     case 'more':trackMenu(id,b.dataset.ctx);break;
     case 'toggle':toggle();break;
     case 'next':next();break;
     case 'prev':prev();break;
-    case 'shuffle':setShuffle(!player.shuffle);paintPlayer();if(route.v==='coll'||route.v==='queue')render();toast(player.shuffle?'Lecture aléatoire activée':'Lecture aléatoire désactivée');break;
+    case 'shuffle':setShuffle(!player.shuffle);paintPlayer();document.querySelectorAll('.cact .mode').forEach(x=>{x.classList.toggle('active',player.shuffle);x.setAttribute('aria-pressed',player.shuffle)});toast(player.shuffle?'Lecture aléatoire activée':'Lecture aléatoire désactivée');break;
     case 'repeat':player.repeat={off:'all',all:'one',one:'off'}[player.repeat];store.set('rep',player.repeat);paintPlayer();toast({off:'Répétition désactivée',all:'Répéter la liste',one:'Répéter ce titre'}[player.repeat]);break;
-    case 'like-current':{const t=player.cur();if(t){const on=lib.toggleLike(t.id);paintPlayer();render();toast(on?'Ajouté aux titres likés':'Retiré des titres likés')}break}
-    case 'more-current':{const t=player.cur();if(t)trackMenu(t.id,player.ctxKey)}break;
+    case 'like-current':{const t=player.cur();if(t){const on=lib.toggleLike(t.id);paintPlayer();if(route.v!=='coll'||route.k==='liked')render();toast(on?'Ajouté aux titres likés':'Retiré des titres likés')}break}
+    case 'more-current':{const t=player.cur();if(t)trackMenu(t.id,player.ctxKey);break}
     case 'artist-current':{const t=player.cur();if(t){closePlayer();go({v:'coll',k:'artist:'+t.artist})}break}
     case 'open-player':openPlayer();break;
     case 'close-player':closePlayer();break;
     case 'queue':closePlayer();if(route.v!=='queue')go({v:'queue'});break;
     case 'timer':timerMenu();break;
+    case 'csort':sortMenu();break;
     case 'clear-up':player.up=[];render();break;
     case 'unqueue':player.up.splice(+b.dataset.i,1);render();break;
     case 'new-pl':nameForm('create');break;
     case 'import':$('#files').click();break;
+    case 'pick-tracks':pickTracks(id);break;
+    case 'pick-one':{const p=lib.pl(b.dataset.p);if(p.tracks.includes(id))lib.removeFrom(p.id,id);else lib.addTo(p.id,id);modal._refresh&&modal._refresh();break}
+    case 'm-done':closeModal();render();break;
     case 'libf':libFilter=b.dataset.f;store.set('libf',libFilter);render();break;
     case 'libsort':libSort=libSort==='az'?'recent':'az';store.set('libs',libSort);render();break;
     case 'pl-menu':plMenu(id);break;
     case 'm-close':closeModal();break;
+    case 'm-sort':cSort=b.dataset.v;store.set('csort',cSort);closeModal();if($('#clist'))$('#clist').innerHTML=collList(route.k);break;
     case 'm-like':{const on=lib.toggleLike(id);closeModal();paintPlayer();render();toast(on?'Ajouté aux titres likés':'Retiré des titres likés');break}
     case 'm-addpl':addToPlMenu(id);break;
     case 'm-newpl':nameForm('create',null,id);break;
     case 'm-pick':{const p=lib.pl(b.dataset.p);lib.addTo(p.id,id);closeModal();render();toast(`Ajouté à « ${p.name} »`);break}
-    case 'm-queue':player.up.push(id);closeModal();if(!player.cur()){next()}if(route.v==='queue')render();toast('Ajouté à la file d’attente');break;
+    case 'm-queue':player.up.push(id);closeModal();if(!player.cur())next();if(route.v==='queue')render();toast('Ajouté à la file d’attente');break;
     case 'm-artist':closeModal();closePlayer();go({v:'coll',k:'artist:'+lib.get(id).artist});break;
     case 'm-rmpl':{const p=lib.pl(b.dataset.p);lib.removeFrom(p.id,id);closeModal();render();toast(`Retiré de « ${p.name} »`);break}
-    case 'm-delfile':{lib.tracks=lib.tracks.filter(t=>t.id!==id);idb.del(id);lib.playlists.forEach(p=>p.tracks=p.tracks.filter(x=>x!==id));lib.savePl();lib.liked.delete(id);store.set('liked',[...lib.liked]);player.up=player.up.filter(x=>x!==id);closeModal();render();toast('Fichier supprimé de ce téléphone');break}
+    case 'm-delfile':{lib.tracks=lib.tracks.filter(t=>t.id!==id);idb.del(id);lib.purge();player.up=player.up.filter(x=>x!==id);closeModal();render();toast('Titre supprimé de ce téléphone');break}
     case 'm-rename':nameForm('rename',b.dataset.p);break;
-    case 'm-queuepl':{const p=lib.pl(b.dataset.p);player.up.push(...p.tracks);closeModal();if(!player.cur())next();toast(`${p.tracks.length} titre${p.tracks.length>1?'s':''} ajouté${p.tracks.length>1?'s':''} à la file`);break}
+    case 'm-queuepl':{const p=lib.pl(b.dataset.p),ids=lib.plIds(p);player.up.push(...ids);closeModal();if(!player.cur()&&ids.length)next();toast(`${plural(ids.length,'titre')} ajouté${ids.length>1?'s':''} à la file`);break}
     case 'm-delpl':plMenu(b.dataset.p,true);break;
     case 'm-delpl-yes':{const p=lib.pl(b.dataset.p);lib.deletePl(p.id);closeModal();if(route.v==='coll'&&route.k==='pl:'+p.id)back();else render();toast(`« ${p.name} » supprimée`);break}
     case 'm-timer':{const v=b.dataset.v;setTimer(v==='end'?'end':+v);closeModal();toast(v==='0'?'Minuteur désactivé':v==='end'?'Arrêt à la fin du titre':`Arrêt dans ${b.querySelector('.grow').textContent}`);break}
   }
 });
-document.querySelector('[data-act="prev"]').innerHTML=ic('prev');
-document.querySelector('[data-act="next"]').innerHTML=ic('next');
-document.querySelector('[data-act="more-current"]').innerHTML=ic('more');
-document.querySelector('.extra [data-act="queue"]').innerHTML=ic('queue')+'File d’attente';
+$('#prevBtn').innerHTML=ic('prev');$('#nextBtn').innerHTML=ic('next');$('#moreCur').innerHTML=ic('more');
+$('#queueBtn').innerHTML=ic('queue')+'File d’attente';
 document.addEventListener('keydown',e=>{if(e.code==='Space'&&!/INPUT|BUTTON|TEXTAREA/.test(e.target.tagName)&&scrim.hidden){e.preventDefault();toggle()}});
 
-$('#files').addEventListener('change',e=>{
-  const fs=[...e.target.files];if(!fs.length)return;
-  fs.forEach(f=>{
-    const base=f.name.replace(/\.[^.]+$/,'').replace(/_/g,' ').trim();
-    const parts=base.split(/\s+-\s+/);
-    const t={id:'f'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),title:(parts[1]||parts[0]).trim(),artist:parts[1]?parts[0].trim():'Artiste inconnu',hue:hueOf(base),blob:f,demo:false,url:null,dur:NaN,mood:null};
-    lib.tracks.unshift(t);idb.put({id:t.id,title:t.title,artist:t.artist,hue:t.hue,blob:f});
-    const probe=new Audio();probe.preload='metadata';probe.src=URL.createObjectURL(f);probe.onloadedmetadata=()=>{t.dur=probe.duration;URL.revokeObjectURL(probe.src)};
-  });
-  e.target.value='';closePlayer();stack=[{v:'library'}];route={v:'coll',k:'files'};render();
-  toast(fs.length+(fs.length>1?' titres ajoutés':' titre ajouté'));
+$('#files').addEventListener('change',async e=>{
+  const fs=[...e.target.files];e.target.value='';if(!fs.length)return;
+  toast(`Import de ${plural(fs.length,'titre')}…`);
+  const now=Date.now(),made=[];
+  for(let i=0;i<fs.length;i++){
+    const f=fs[i],tags=await readTags(f),fb=fromName(f.name);
+    const rec={id:'f'+now.toString(36)+i+Math.random().toString(36).slice(2,5),title:(tags.title||'').trim()||fb.title,artist:(tags.artist||'').trim()||fb.artist,album:(tags.album||'').trim(),added:now+i,blob:f,pic:tags.pic||null,tagged:2};
+    idb.put(rec);made.push([addTrack(rec),rec]);
+  }
+  closePlayer();stack=[{v:'library'}];route={v:'coll',k:'files'};cQuery='';render();
+  toast(`${plural(fs.length,'titre')} ajouté${fs.length>1?'s':''}`);
+  for(const [t,rec] of made)await finishTrack(t,rec);
+  render();
 });
 
-paintPlayer();paintTimer();render();
+
 /* ---- Telegram Mini App ---- */
 const tg=window.Telegram&&window.Telegram.WebApp;
 if(tg&&tg.initData!==undefined){
@@ -728,10 +818,21 @@ if(tg&&tg.initData!==undefined){
   document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&tg.HapticFeedback){try{tg.HapticFeedback.selectionChanged()}catch(err){}}},true);
   syncBack();
 }
-
-idb.open().then(idb.all).then(saved=>{if(!saved.length)return;saved.sort((a,b)=>a.id<b.id?-1:1).forEach(s=>lib.tracks.unshift({...s,demo:false,url:null,dur:NaN,mood:null}));
-  saved.forEach(s=>{const t=lib.get(s.id);const pr=new Audio();pr.preload='metadata';pr.src=URL.createObjectURL(s.blob);pr.onloadedmetadata=()=>{t.dur=pr.duration;URL.revokeObjectURL(pr.src)}});
-  render()});
+/* ================= Start ================= */
+render();paintPlayer();paintTimer();
+idb.open().then(idb.all).then(async saved=>{
+  const pairs=[];
+  for(const rec of saved){
+    if(!rec.blob)continue;
+    if(rec.tagged!==2){const tags=await readTags(rec.blob);if(tags.title)rec.title=tags.title.trim();if(tags.artist)rec.artist=tags.artist.trim();if(tags.album)rec.album=tags.album.trim();if(tags.pic)rec.pic=tags.pic;rec.added=rec.added||parseInt(rec.id.slice(1),36)||0;rec.tagged=2;idb.put(rec)}
+    pairs.push([addTrack(rec),rec]);
+  }
+  lib.tracks.sort((a,b)=>b.added-a.added);
+  lib.purge();
+  render();
+  for(const [t,rec] of pairs)await finishTrack(t,rec);
+  render();paintPlayer();
+});
 })();
 </script>
 
